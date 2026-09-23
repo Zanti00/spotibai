@@ -1,0 +1,3181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SysAdmin Reviewer — System Administration & Maintenance (BSIT 4-1)</title>
+  <meta name="description" content="Comprehensive interactive single-file reviewer for BSIT 4-1 System Administration and Maintenance including text highlighter, 50-item full quiz, 10-item 5s quick quiz, and 3D flashcards.">
+  <style>
+/* ==========================================================================
+   Spotify-Inspired Dark Theme for SysAdmin Reviewer
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap');
+
+:root {
+  --bg-base: #121212;
+  --bg-surface: #181818;
+  --bg-card: #242424;
+  --bg-card-hover: #2a2a2a;
+  --bg-card-active: #333333;
+  
+  --accent-green: #1db954;
+  --accent-green-hover: #1ed760;
+  --accent-green-alpha: rgba(29, 185, 84, 0.15);
+  
+  --text-primary: #ffffff;
+  --text-secondary: #b3b3b3;
+  --text-muted: #727272;
+  
+  --color-danger: #ef4444;
+  --color-danger-bg: rgba(239, 68, 68, 0.15);
+  --color-success: #10b981;
+  --color-success-bg: rgba(16, 185, 129, 0.15);
+  --color-warning: #f59e0b;
+  
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.2);
+  
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+  
+  --shadow-main: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px rgba(29, 185, 84, 0.3);
+  
+  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: 'Outfit', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-main);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-base);
+}
+::-webkit-scrollbar-thumb {
+  background: #3e3e3e;
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555555;
+}
+
+/* Header & Navigation */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: rgba(18, 18, 18, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--accent-green), #059669);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 800;
+  color: #000;
+  box-shadow: var(--shadow-glow);
+}
+
+.brand-text h1 {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+}
+
+.brand-text p {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.nav-tabs {
+  display: flex;
+  background-color: var(--bg-surface);
+  padding: 4px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-subtle);
+  gap: 4px;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-family: var(--font-main);
+  font-weight: 600;
+  font-size: 13px;
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.tab-btn.active {
+  background-color: var(--accent-green);
+  color: #000;
+  font-weight: 700;
+  box-shadow: 0 2px 10px rgba(29, 185, 84, 0.4);
+}
+
+/* App Container Layout */
+.app-container {
+  flex: 1;
+  max-width: 1320px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* Tab Views */
+.tab-view {
+  display: none;
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tab-view.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Category Filter Bar */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  background-color: var(--bg-surface);
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  margin-bottom: 24px;
+}
+
+.category-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-pill {
+  background-color: var(--bg-card);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-pill:hover {
+  background-color: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.filter-pill.active {
+  background-color: var(--text-primary);
+  color: #000;
+  font-weight: 700;
+  border-color: var(--text-primary);
+}
+
+.search-box {
+  position: relative;
+  min-width: 260px;
+}
+
+.search-box input {
+  width: 100%;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  padding: 8px 16px 8px 36px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.search-box input:focus {
+  border-color: var(--accent-green);
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* Floating Highlighter Toolbar */
+.highlighter-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--bg-card);
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-hover);
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-main);
+  flex-wrap: wrap;
+}
+
+.highlighter-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.color-swatches {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.swatch-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.swatch-btn:hover {
+  transform: scale(1.15);
+}
+
+.swatch-btn.active {
+  border-color: #ffffff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+}
+
+.swatch-yellow { background-color: #fef08a; }
+.swatch-green { background-color: #a7f3d0; }
+.swatch-cyan { background-color: #a5f3fc; }
+.swatch-pink { background-color: #fbcfe8; }
+
+.eraser-btn {
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.eraser-btn:hover, .eraser-btn.active {
+  background-color: var(--color-danger);
+  color: #fff;
+  border-color: var(--color-danger);
+}
+
+.clear-all-hl-btn {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.clear-all-hl-btn:hover {
+  color: var(--color-danger);
+}
+
+/* Inline Text Highlight Classes */
+mark.hl-yellow {
+  background-color: rgba(254, 240, 138, 0.35) !important;
+  color: #ffffff !important;
+  border-bottom: 2px solid #fef08a;
+  border-radius: 2px;
+  padding: 0 2px;
+  cursor: pointer;
+}
+mark.hl-green {
+  background-color: rgba(167, 243, 208, 0.35) !important;
+  color: #ffffff !important;
+  border-bottom: 2px solid #a7f3d0;
+  border-radius: 2px;
+  padding: 0 2px;
+  cursor: pointer;
+}
+mark.hl-cyan {
+  background-color: rgba(165, 243, 252, 0.35) !important;
+  color: #ffffff !important;
+  border-bottom: 2px solid #a5f3fc;
+  border-radius: 2px;
+  padding: 0 2px;
+  cursor: pointer;
+}
+mark.hl-pink {
+  background-color: rgba(251, 207, 232, 0.35) !important;
+  color: #ffffff !important;
+  border-bottom: 2px solid #fbcfe8;
+  border-radius: 2px;
+  padding: 0 2px;
+  cursor: pointer;
+}
+
+/* Lesson Article Cards */
+.lesson-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow-main);
+}
+
+.lesson-header {
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+}
+
+.lesson-header h2 {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--accent-green);
+  margin-bottom: 4px;
+}
+
+.lesson-header p {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.section-block {
+  margin-bottom: 28px;
+}
+
+.section-block h3 {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  color: var(--text-primary);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-block h3::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 18px;
+  background-color: var(--accent-green);
+  border-radius: 2px;
+}
+
+.section-content {
+  color: var(--text-secondary);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.section-content p {
+  margin-bottom: 14px;
+}
+
+.section-content ul, .section-content ol {
+  margin-left: 20px;
+  margin-bottom: 16px;
+}
+
+.section-content li {
+  margin-bottom: 6px;
+}
+
+/* Component Helper Grids & Cards */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.info-card, .func-card, .type-card, .mini-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.info-card:hover, .func-card:hover, .type-card:hover, .mini-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+.info-card h4, .func-card h4, .type-card h4, .mini-card h5 {
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  font-family: var(--font-heading);
+}
+
+.example-tag {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-green);
+  background-color: var(--accent-green-alpha);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+.ethics-quote {
+  background: linear-gradient(135deg, rgba(29, 185, 84, 0.1), rgba(0, 0, 0, 0.3));
+  border-left: 4px solid var(--accent-green);
+  padding: 16px 20px;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  font-style: italic;
+  color: var(--text-primary);
+  margin: 16px 0 24px 0;
+}
+
+.pill-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.badge-pill {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+}
+
+.case-study-box {
+  background-color: var(--bg-card);
+  border-left: 4px solid var(--accent-green);
+  padding: 20px;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  margin: 16px 0;
+}
+
+.alert-box-spotify {
+  background-color: var(--color-danger-bg);
+  border: 1px solid var(--color-danger);
+  color: #fca5a5;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  margin: 16px 0;
+  font-size: 14px;
+}
+
+/* ==========================================================================
+   Quiz Tab (50 Items) & Quick Quiz Tab (10 Items 5s)
+   ========================================================================== */
+.quiz-header-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.quiz-title h2 {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.quiz-title p {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.quiz-stats {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.stat-box {
+  text-align: center;
+}
+
+.stat-value {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--accent-green);
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.quiz-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-primary {
+  background-color: var(--accent-green);
+  color: #000;
+  font-family: var(--font-main);
+  font-weight: 700;
+  font-size: 13px;
+  padding: 10px 22px;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-green-hover);
+  transform: scale(1.03);
+  box-shadow: var(--shadow-glow);
+}
+
+.btn-secondary {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  font-family: var(--font-main);
+  font-weight: 600;
+  font-size: 13px;
+  padding: 10px 20px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--border-hover);
+}
+
+/* ==========================================================================
+   Quiz Setup & Pre-Quiz Category Selection Styles
+   ========================================================================== */
+.quiz-setup-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 36px 32px;
+  max-width: 820px;
+  margin: 0 auto 30px auto;
+  box-shadow: var(--shadow-main);
+  text-align: center;
+}
+
+.setup-icon {
+  font-size: 44px;
+  margin-bottom: 12px;
+}
+
+.quiz-setup-card h2 {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.setup-subtitle {
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 640px;
+  margin: 0 auto 28px auto;
+}
+
+.setup-category-group {
+  text-align: left;
+  margin-bottom: 24px;
+}
+
+.setup-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+}
+
+.setup-category-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.setup-cat-opt {
+  background-color: var(--bg-card);
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  cursor: pointer;
+  text-align: left;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.setup-cat-opt:hover {
+  border-color: var(--border-hover);
+  background-color: var(--bg-card-hover);
+  transform: translateY(-2px);
+}
+
+.setup-cat-opt.active {
+  border-color: var(--accent-green);
+  background-color: rgba(29, 185, 84, 0.08);
+  box-shadow: 0 0 14px rgba(29, 185, 84, 0.2);
+}
+
+.opt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.opt-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background-color: rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+}
+
+.setup-cat-opt.active .opt-badge {
+  background-color: var(--accent-green-alpha);
+  color: var(--accent-green);
+}
+
+.opt-check {
+  font-size: 13px;
+  font-weight: 800;
+  color: transparent;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.setup-cat-opt.active .opt-check {
+  background-color: var(--accent-green);
+  border-color: var(--accent-green);
+  color: #000;
+}
+
+.opt-title {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.opt-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.setup-lock-notice {
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px dashed var(--border-hover);
+  border-radius: var(--radius-md);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.notice-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.btn-large {
+  padding: 14px 36px;
+  font-size: 15px;
+}
+
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 12px;
+}
+
+.category-locked-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: rgba(29, 185, 84, 0.12);
+  border: 1px solid var(--accent-green);
+  color: var(--accent-green);
+  padding: 4px 14px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+  margin: 6px 0 10px 0;
+}
+
+.speed-round-top-bar {
+  max-width: 760px;
+  margin: 0 auto 16px auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+
+/* Question List & Items */
+.question-item {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 22px;
+  margin-bottom: 16px;
+  transition: border-color 0.2s ease;
+}
+
+.question-item.correct-answered {
+  border-color: var(--color-success);
+}
+
+.question-item.wrong-answered {
+  border-color: var(--color-danger);
+}
+
+.q-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.q-badge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-card);
+  color: var(--text-secondary);
+}
+
+.q-num {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-green);
+}
+
+.q-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.option-btn {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.option-btn:hover:not(:disabled) {
+  background-color: var(--bg-card-hover);
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+}
+
+.option-btn.selected {
+  background-color: rgba(29, 185, 84, 0.2);
+  border-color: var(--accent-green);
+  color: var(--text-primary);
+}
+
+.option-btn.correct {
+  background-color: var(--color-success-bg);
+  border-color: var(--color-success);
+  color: #6ee7b7;
+  font-weight: 700;
+}
+
+.option-btn.wrong {
+  background-color: var(--color-danger-bg);
+  border-color: var(--color-danger);
+  color: #fca5a5;
+}
+
+.opt-prefix {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.explanation-box {
+  background-color: var(--bg-card);
+  border-left: 3px solid var(--accent-green);
+  padding: 12px 16px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 12px;
+  display: none;
+}
+
+.explanation-box.visible {
+  display: block;
+}
+
+/* ==========================================================================
+   Quick Quiz Specific Styles (5-Second Linear Timer per Question)
+   ========================================================================== */
+.quick-quiz-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  max-width: 760px;
+  margin: 0 auto;
+  box-shadow: var(--shadow-main);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Linear Timer Bar at top of Quick Quiz Card */
+.timer-bar-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background-color: var(--bg-card);
+}
+
+.timer-bar-fill {
+  height: 100%;
+  width: 100%;
+  background-color: var(--accent-green);
+  transition: width 0.1s linear, background-color 0.3s ease;
+}
+
+.timer-bar-fill.warning {
+  background-color: var(--color-danger);
+  box-shadow: 0 0 10px var(--color-danger);
+}
+
+.quick-quiz-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.timer-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--accent-green);
+}
+
+.timer-badge.urgent {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+  animation: pulseUrgent 0.5s infinite alternate;
+}
+
+@keyframes pulseUrgent {
+  from { transform: scale(1); }
+  to { transform: scale(1.06); }
+}
+
+.qq-score-summary {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.score-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-green-alpha) 0%, transparent 70%);
+  border: 4px solid var(--accent-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px auto;
+  font-family: var(--font-heading);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--accent-green);
+}
+
+/* ==========================================================================
+   Flashcards Tab Styling (3D Flip Animation)
+   ========================================================================== */
+.flashcards-container {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.flashcard-wrapper {
+  perspective: 1000px;
+  width: 100%;
+  height: 360px;
+  margin-bottom: 24px;
+  cursor: pointer;
+}
+
+.flashcard-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.flashcard-wrapper.flipped .flashcard-inner {
+  transform: rotateY(180deg);
+}
+
+.flashcard-front, .flashcard-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-hover);
+  box-shadow: var(--shadow-main);
+}
+
+.flashcard-front {
+  background: linear-gradient(145deg, var(--bg-surface), var(--bg-card));
+  color: var(--text-primary);
+}
+
+.flashcard-back {
+  background: linear-gradient(145deg, #1e293b, var(--bg-surface));
+  color: var(--text-primary);
+  transform: rotateY(180deg);
+  border-color: var(--accent-green);
+}
+
+.card-category-tag {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--accent-green);
+  background-color: var(--accent-green-alpha);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+}
+
+.mastered-badge-top {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #10b981;
+  background-color: var(--color-success-bg);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+}
+
+.flashcard-front h3 {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.hint-text {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 16px;
+}
+
+.flashcard-back p {
+  font-size: 17px;
+  line-height: 1.6;
+  color: #e2e8f0;
+}
+
+.flashcard-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.fc-btn-icon {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.2s ease;
+}
+
+.fc-btn-icon:hover {
+  background-color: var(--accent-green);
+  color: #000;
+  border-color: var(--accent-green);
+}
+
+.mastered-btn {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mastered-btn:hover, .mastered-btn.active {
+  background-color: var(--color-success);
+  color: #000;
+  border-color: var(--color-success);
+  font-weight: 700;
+}
+
+/* Mastery Progress Bar */
+.mastery-progress-wrapper {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.progress-track {
+  flex: 1;
+  height: 8px;
+  background-color: var(--bg-card);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background-color: var(--accent-green);
+  transition: width 0.3s ease;
+}
+
+/* Footer */
+.app-footer {
+  text-align: center;
+  padding: 24px;
+  font-size: 12px;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-subtle);
+  margin-top: auto;
+}
+
+/* Floating Action Button (FAB) Highlighter */
+.fab-container {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.fab-menu {
+  background: rgba(24, 24, 24, 0.94);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-hover);
+  border-radius: var(--radius-full);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px) scale(0.95);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fab-container.open .fab-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.fab-main-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-green), #059669);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: #000;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(29, 185, 84, 0.4);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fab-main-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 25px rgba(29, 185, 84, 0.6);
+}
+
+.fab-container.open .fab-main-btn {
+  background: #2a2a2a;
+  color: #fff;
+  border-color: var(--border-hover);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .app-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .nav-tabs {
+    overflow-x: auto;
+    justify-content: flex-start;
+  }
+  .fab-container {
+    bottom: 16px;
+    right: 16px;
+  }
+  .fab-menu {
+    flex-wrap: wrap;
+    border-radius: var(--radius-md);
+  }
+}
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-icon">SA</div>
+      <div class="brand-text">
+        <h1>SysAdmin Reviewer</h1>
+        <p>BSIT 4-1 System Administration & Maintenance</p>
+      </div>
+    </div>
+
+    <nav class="nav-tabs" aria-label="Main Navigation">
+      <button class="tab-btn active" data-tab="reviewer">
+        📖 Main Reviewer
+      </button>
+      <button class="tab-btn" data-tab="full-quiz">
+        📝 Full Quiz (50)
+      </button>
+      <button class="tab-btn" data-tab="quick-quiz">
+        ⚡ Quick Quiz (5s)
+      </button>
+      <button class="tab-btn" data-tab="flashcards">
+        🎴 Flashcards
+      </button>
+    </nav>
+  </header>
+
+  <!-- Application Main Container -->
+  <main class="app-container">
+
+    <!-- ==========================================================================
+         TAB 1: MAIN REVIEWER (With Persistent Text Highlighting & Eraser)
+         ========================================================================== -->
+    <section class="tab-view active" id="tab-reviewer">
+      <!-- Reviewer Category Filter & Search Bar (Only allowed in Main Reviewer) -->
+      <div class="filter-bar">
+        <div class="category-pills" id="reviewer-category-pills">
+          <button class="filter-pill active" data-category="all">All Topics</button>
+          <button class="filter-pill" data-category="lesson1">Lesson 1: SysAdmin & Ethics</button>
+          <button class="filter-pill" data-category="lesson2">Lesson 2: OS Concepts & Types</button>
+          <button class="filter-pill" data-category="lesson3">Lesson 3: Security & DPA</button>
+        </div>
+
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input" id="reviewer-search-input" placeholder="Search keywords..." aria-label="Search keywords">
+        </div>
+      </div>
+
+      <!-- Reviewer Content Injection Container -->
+      <div id="reviewer-content-container"></div>
+    </section>
+
+    <!-- ==========================================================================
+         TAB 2: FULL QUIZ (50 Items: True/False & Multiple Choice)
+         ========================================================================== -->
+    <section class="tab-view" id="tab-full-quiz">
+      <!-- State 1: Category Setup View (Shown before quiz starts) -->
+      <div id="full-quiz-setup" class="quiz-setup-card">
+        <div class="setup-icon">📝</div>
+        <h2>Full Quiz - Category Selection</h2>
+        <p class="setup-subtitle">
+          Select a category to begin your comprehensive quiz. Instant feedback, scoring, and detailed explanations will be provided for each item.
+        </p>
+
+        <div class="setup-category-group">
+          <label class="setup-label">Choose Quiz Category:</label>
+          <div class="setup-category-options" id="full-quiz-cat-options">
+            <button type="button" class="setup-cat-opt active" data-category="all">
+              <div class="opt-header">
+                <span class="opt-badge">All 50 Items</span>
+                <span class="opt-check">✓</span>
+              </div>
+              <div class="opt-title">Complete Mastery (All Topics)</div>
+              <div class="opt-desc">Covers Lesson 1, Lesson 2, and Lesson 3 in randomized order.</div>
+            </button>
+            <button type="button" class="setup-cat-opt" data-category="lesson1">
+              <div class="opt-header">
+                <span class="opt-badge">15 Items</span>
+                <span class="opt-check">✓</span>
+              </div>
+              <div class="opt-title">Lesson 1: SysAdmin & Ethics</div>
+              <div class="opt-desc">Principles, routine tasks, core challenges, and Filipino IT Code of Ethics.</div>
+            </button>
+            <button type="button" class="setup-cat-opt" data-category="lesson2">
+              <div class="opt-header">
+                <span class="opt-badge">17 Items</span>
+                <span class="opt-check">✓</span>
+              </div>
+              <div class="opt-title">Lesson 2: OS Concepts & Types</div>
+              <div class="opt-desc">OS definitions, core functions, kernel architectures, server vs desktop.</div>
+            </button>
+            <button type="button" class="setup-cat-opt" data-category="lesson3">
+              <div class="opt-header">
+                <span class="opt-badge">18 Items</span>
+                <span class="opt-check">✓</span>
+              </div>
+              <div class="opt-title">Lesson 3: Security & DPA</div>
+              <div class="opt-desc">CIA triad, access controls, compliance frameworks, and RA 10173 DPA.</div>
+            </button>
+          </div>
+        </div>
+
+        <div class="setup-lock-notice">
+          <span class="notice-icon">🔒</span>
+          <span><strong>Category Lock:</strong> Once you start the quiz, you cannot change the category midway without restarting.</span>
+        </div>
+
+        <div class="setup-actions">
+          <button class="btn-primary btn-large" id="start-full-quiz-btn">
+            🚀 Start Full Quiz
+          </button>
+        </div>
+      </div>
+
+      <!-- State 2: Active Quiz View (Shown when quiz is running) -->
+      <div id="full-quiz-active" style="display: none;">
+        <div class="quiz-header-card">
+          <div class="quiz-title">
+            <h2>System Administration Master Quiz</h2>
+            <div class="category-locked-banner" id="full-quiz-locked-badge">
+              🔒 Category Locked: <strong>All Topics</strong>
+            </div>
+            <p>True/False & Multiple Choice • Instant Feedback & Explanations</p>
+          </div>
+          <div class="quiz-stats">
+            <div class="stat-box">
+              <div class="stat-value"><span id="full-quiz-score">0</span> / <span id="full-quiz-total">50</span></div>
+              <div class="stat-label">Current Score</div>
+            </div>
+          </div>
+          <div class="quiz-actions">
+            <button class="btn-primary" id="retake-full-quiz-btn" title="Restart current category with newly shuffled choices">
+              🔄 Retake & Reshuffle
+            </button>
+            <button class="btn-secondary" id="change-cat-full-quiz-btn" title="Return to Category Selection">
+              🔀 Change Category
+            </button>
+          </div>
+        </div>
+
+        <!-- Quiz Questions Injection Area -->
+        <div id="full-quiz-container"></div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         TAB 3: QUICK QUIZ (10 Items, 5s Linear Timer per Question)
+         ========================================================================== -->
+    <section class="tab-view" id="tab-quick-quiz">
+      <!-- State 1: Category Setup View (Shown before speed round starts) -->
+      <div id="quick-quiz-setup" class="quiz-setup-card">
+        <div class="setup-icon">⚡</div>
+        <h2>Quick Quiz - 5s Speed Round Setup</h2>
+        <p class="setup-subtitle">
+          Test your rapid recall! <strong>10 randomized questions</strong> with a <strong>5-second linear countdown timer per question</strong>. If time expires, the item is automatically marked incorrect and advances immediately.
+        </p>
+
+        <div class="setup-category-group">
+          <label class="setup-label">Choose Speed Round Category:</label>
+          <div class="setup-category-options" id="quick-quiz-cat-options">
+            <button type="button" class="setup-cat-opt active" data-category="all">
+              <div class="opt-header">
+                <span class="opt-badge">10 Random Items</span>
+                <span class="opt-check">✓</span>
+              </div>
+              <div class="opt-title">All Topics (Speed Mix)</div>
+              <div class="opt-desc">Rapid questions randomly picked across all 3 lessons.</div>
+            </button>
+            <button type="button" class="setup-cat-opt" data-category="lesson1">
+              <div class="opt-header">
+                <span class="opt-badge">Lesson 1 Only</span>
+                <span class="opt-check">✓</span>
+              </div>
+              <div class="opt-title">Lesson 1: SysAdmin & Ethics</div>
+              <div class="opt-desc">Speed questions on sysadmin duties, principles, and ethics.</div>
+            </button>
+            <button type="button" class="setup-cat-opt" data-category="lesson2">
+              <div class="opt-header">
+                <span class="opt-badge">Lesson 2 Only</span>
+                <span class="opt-check">✓</span>
+              </div>
+              <div class="opt-title">Lesson 2: OS Concepts & Types</div>
+              <div class="opt-desc">Speed questions on OS kernels, architectures, and operations.</div>
+            </button>
+            <button type="button" class="setup-cat-opt" data-category="lesson3">
+              <div class="opt-header">
+                <span class="opt-badge">Lesson 3 Only</span>
+                <span class="opt-check">✓</span>
+              </div>
+              <div class="opt-title">Lesson 3: Security & DPA</div>
+              <div class="opt-desc">Speed questions on CIA triad, security standards, and RA 10173.</div>
+            </button>
+          </div>
+        </div>
+
+        <div class="setup-lock-notice">
+          <span class="notice-icon">🔒</span>
+          <span><strong>Category Lock:</strong> Once speed round begins, category cannot be changed mid-test.</span>
+        </div>
+
+        <div class="setup-actions">
+          <button class="btn-primary btn-large" id="start-quick-quiz-btn">
+            ⚡ Start 5-Second Speed Round
+          </button>
+        </div>
+      </div>
+
+      <!-- State 2: Active Speed Round View -->
+      <div id="quick-quiz-active" style="display: none;">
+        <div class="speed-round-top-bar">
+          <div class="category-locked-banner" id="quick-quiz-locked-badge">
+            🔒 Speed Round: <strong>All Topics</strong> (Locked)
+          </div>
+          <button class="btn-secondary btn-sm" id="quit-quick-quiz-btn" title="Cancel speed round and return to setup">
+            ✕ Quit to Setup
+          </button>
+        </div>
+        <div id="quick-quiz-container"></div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         TAB 4: FLASHCARDS (3D Flip, Mastery Tracking, Filter)
+         ========================================================================== -->
+    <section class="tab-view" id="tab-flashcards">
+      <div class="flashcards-container">
+        <!-- Category Filter for Flashcards (No Search Bar) -->
+        <div class="filter-bar" style="margin-bottom: 20px; justify-content: center;">
+          <div class="category-pills" id="flashcards-category-pills">
+            <button class="filter-pill active" data-category="all">All Flashcards</button>
+            <button class="filter-pill" data-category="lesson1">Lesson 1</button>
+            <button class="filter-pill" data-category="lesson2">Lesson 2</button>
+            <button class="filter-pill" data-category="lesson3">Lesson 3</button>
+          </div>
+        </div>
+        
+        <!-- Mastery Progress Header -->
+        <div class="mastery-progress-wrapper">
+          <div style="font-size: 13px; font-weight: 700; color: var(--text-secondary); width: 130px;">
+            Mastery Progress:
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="mastery-progress-fill"></div>
+          </div>
+          <div style="font-size: 13px; font-weight: 700; color: var(--accent-green);" id="mastery-progress-text">
+            0 / 36 Mastered
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+          <label style="font-size: 13px; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" id="toggle-unmastered-only">
+            Focus Unmastered Cards Only
+          </label>
+        </div>
+
+        <!-- Flashcard Render Area -->
+        <div id="flashcards-render-area"></div>
+      </div>
+    </section>
+
+  <!-- Floating Action Button (FAB) Highlighter -->
+  <div class="fab-container open" id="fab-highlighter">
+    <div class="fab-menu" id="fab-menu">
+      <span class="highlighter-label">Highlighter:</span>
+      <div class="color-swatches">
+        <button class="swatch-btn swatch-yellow active" data-color="yellow" title="Highlight Yellow"></button>
+        <button class="swatch-btn swatch-green" data-color="green" title="Highlight Emerald Green"></button>
+        <button class="swatch-btn swatch-cyan" data-color="cyan" title="Highlight Sky Cyan"></button>
+        <button class="swatch-btn swatch-pink" data-color="pink" title="Highlight Rose Pink"></button>
+      </div>
+      <button class="eraser-btn" id="eraser-btn" title="Click highlighted text anywhere to erase">
+        🧹 Eraser
+      </button>
+      <button class="clear-all-hl-btn" id="clear-all-hl-btn">Clear All</button>
+    </div>
+    <button class="fab-main-btn" id="fab-main-btn" title="Toggle Highlighter Palette">
+      🖍️
+    </button>
+  </div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <p>BSIT 4-1 System Administration and Maintenance Reviewer • Single-File Web App</p>
+    <div style="margin-top: 10px;">
+      <button id="reset-all-progress-btn" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 11px; padding: 4px 14px; border-radius: var(--radius-full); cursor: pointer; transition: all 0.2s ease;">
+        🗑️ Reset All Saved Progress
+      </button>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       Embedded JavaScript (Content Dataset + Application Logic)
+       ========================================================================== -->
+  <script>
+/**
+ * BSIT 4-1 Reviewer Content Dataset
+ * Source: BSIT-4-1-Reviewers.md
+ */
+const REVIEWER_CONTENT = {
+  lessons: [
+    {
+      id: "lesson-1",
+      title: "Lesson 1: System Administration & Maintenance",
+      subtitle: "Fundamentals, Roles, Ethics & Case Study",
+      category: "lesson1",
+      sections: [
+        {
+          id: "sysadmin-overview",
+          heading: "System Administration Overview",
+          content: `
+<p><strong>System Administration</strong> is a branch of engineering that deals with the operational management of human–computer systems. It involves managing and maintaining computer systems and networks, ensuring that IT infrastructure operates efficiently, securely, and reliably. This discipline is crucial for the smooth functioning of any organization that relies on technology.</p>
+
+<p>A <strong>System Administrator (SysAdmin)</strong> is responsible for the upkeep, configuration, and reliable operation of computer systems, especially servers. They ensure operational continuity, enforce security, support users, and optimize resources to meet organizational goals.</p>
+          `,
+          keyPoints: [
+            "Operational management of human-computer systems",
+            "Ensures efficiency, security, and reliability of IT infrastructure",
+            "Responsible for server upkeep, configuration, and operational continuity"
+          ]
+        },
+        {
+          id: "sysadmin-responsibilities-goals",
+          heading: "Key Responsibilities & Goals",
+          content: `
+<div class="grid-2">
+  <div class="info-card">
+    <h4>Key Responsibilities</h4>
+    <ul>
+      <li>Install and configure hardware and software</li>
+      <li>Manage servers and networks</li>
+      <li>Monitor system performance</li>
+      <li>Ensure security through updates and firewalls</li>
+      <li>Manage user accounts and permissions</li>
+      <li>Plan for backup and disaster recovery</li>
+    </ul>
+  </div>
+  <div class="info-card">
+    <h4>Key Goals</h4>
+    <ul>
+      <li><strong>Availability:</strong> Systems are always accessible.</li>
+      <li><strong>Security:</strong> Protect data and infrastructure.</li>
+      <li><strong>Efficiency:</strong> Optimize performance.</li>
+      <li><strong>Scalability:</strong> Support future growth.</li>
+    </ul>
+  </div>
+</div>
+          `
+        },
+        {
+          id: "sysadmin-discipline-tasks-challenges",
+          heading: "Discipline, Tasks, Challenges & Principles",
+          content: `
+<h4>System Administration Discipline</h4>
+<p>Combines technical expertise with strategic planning across core domains:</p>
+<ul>
+  <li><strong>Operating Systems:</strong> Linux, Windows, macOS</li>
+  <li><strong>Networking:</strong> TCP/IP, DNS, DHCP</li>
+  <li><strong>Security:</strong> Firewalls, encryption</li>
+  <li><strong>Automation:</strong> Scripting, configuration tools</li>
+  <li><strong>Monitoring & Logging:</strong> Nagios, Zabbix</li>
+</ul>
+
+<h4>Routine Tasks vs. Challenges</h4>
+<div class="grid-2">
+  <div>
+    <h5>SysAdmin Tasks</h5>
+    <ul>
+      <li><strong>Routine Maintenance:</strong> Updates & hardware checks</li>
+      <li><strong>User Management:</strong> Account creation & access control</li>
+      <li><strong>System Monitoring:</strong> Performance tracking & alerts</li>
+      <li><strong>Backup & Recovery:</strong> Data protection strategies</li>
+      <li><strong>Troubleshooting:</strong> Diagnosing & resolving issues</li>
+      <li><strong>Documentation:</strong> Recording configurations & changes</li>
+    </ul>
+  </div>
+  <div>
+    <h5>Core Challenges</h5>
+    <ul>
+      <li><strong>Security Threats:</strong> Cyberattacks & vulnerabilities</li>
+      <li><strong>Downtime Management:</strong> Minimizing service interruptions</li>
+      <li><strong>Resource Constraints:</strong> Limited budget & staff</li>
+      <li><strong>Technology Evolution:</strong> Keeping up with new tools</li>
+      <li><strong>User Expectations:</strong> Balancing needs & limitations</li>
+    </ul>
+  </div>
+</div>
+
+<h4>6 Principles of System Administration</h4>
+<ol>
+  <li><strong>Reliability:</strong> Systems must be dependable.</li>
+  <li><strong>Security:</strong> Protect systems and data.</li>
+  <li><strong>Scalability:</strong> Plan for future growth.</li>
+  <li><strong>Automation:</strong> Reduce manual repetitive tasks.</li>
+  <li><strong>Documentation:</strong> Maintain clear and updated records.</li>
+  <li><strong>Monitoring:</strong> Detect issues proactively before users notice.</li>
+</ol>
+          `
+        },
+        {
+          id: "code-of-ethics",
+          heading: "Filipino Code of Ethics for IT Professionals",
+          content: `
+<blockquote class="ethics-quote">
+"I will use my special knowledge and skills for the benefit of the public. I will serve employers and clients with integrity, subject to an overriding responsibility to the public interest. And I will strive to enhance the competence and prestige profession."
+</blockquote>
+
+<h4>10 Ethical Declarations</h4>
+<ol>
+  <li>I will promote public knowledge, understanding, and appreciation of information technology.</li>
+  <li>I will consider the general welfare and public good in performance of my work.</li>
+  <li>I will advertise goods and professional services in a clear and truthful manner.</li>
+  <li>I will comply and strictly abide by the intellectual property laws, patent laws, and other related laws in respect of information technology.</li>
+  <li>I will accept full responsibility for the work undertaken and will utilize my skills with competence and professionalism.</li>
+  <li>I will make truthful statements on my areas of competence as well as the capabilities and qualities of my product or services.</li>
+  <li>I will not disclose or use any confidential information obtained in the course of professional duties without the consent of the parties concerned, except when required by law.</li>
+  <li>I will strive to attain the highest quality in both the products and services that I offer.</li>
+  <li>I will not knowingly participate in the development of information technology system that will promote the commission of fraud and other unlawful acts.</li>
+  <li>I will uphold and improve the IT professional standards through continuing professional development in order to enhance the IT profession.</li>
+</ol>
+
+<h4>PCS & PICTO Ethical Guidelines</h4>
+<div class="pill-group">
+  <span class="badge-pill">Integrity: Honest & transparent</span>
+  <span class="badge-pill">Professionalism: Competence & respect</span>
+  <span class="badge-pill">Confidentiality: Protect user data</span>
+  <span class="badge-pill">Accountability: Take responsibility</span>
+  <span class="badge-pill">Respect for IP: Avoid software piracy</span>
+  <span class="badge-pill">Social Responsibility: Technology for public good</span>
+</div>
+          `
+        },
+        {
+          id: "case-study",
+          heading: "Case Study: Keeping the School Network Running",
+          content: `
+<div class="case-study-box">
+  <h4>Background</h4>
+  <p><strong>SysAdmin Discaya</strong> manages a public senior high school network in Quezon City (500 students, 40 staff, 30 lab PCs, LMS server, Wi-Fi routers, campus printers).</p>
+
+  <h4>Incident & Response</h4>
+  <p>On Monday morning, the LMS crashed due to a failed weekend update. Discaya took immediate action:</p>
+  <ul>
+    <li><strong>System Monitoring:</strong> Checked server logs to pinpoint crash cause (failed update).</li>
+    <li><strong>Troubleshooting:</strong> Rebooted server and rolled back the update to restore service.</li>
+    <li><strong>User Support:</strong> Informed staff and guided them to backup materials.</li>
+    <li><strong>Security Check:</strong> Confirmed no data loss and verified firewall protected the network.</li>
+    <li><strong>Documentation:</strong> Documented the incident & scheduled safer off-peak updates.</li>
+    <li><strong>Backup & Recovery:</strong> Verified automatic backups preserved all student data.</li>
+  </ul>
+
+  <h4>Outcome</h4>
+  <p>LMS restored in <strong>2 hours</strong>. Principal commended Discaya for quick, professional response.</p>
+</div>
+          `
+        }
+      ]
+    },
+    {
+      id: "lesson-2",
+      title: "Lesson 2: Understanding Operating System",
+      subtitle: "Core Concepts, Functions & 9 OS Types",
+      category: "lesson2",
+      sections: [
+        {
+          id: "os-introduction",
+          heading: "OS Definition & Importance",
+          content: `
+<p>An <strong>Operating System (OS)</strong> is software that manages computer hardware and software resources and provides common services for computer programs.</p>
+
+<h4>8 Key Reasons Why OS is Fundamental</h4>
+<div class="grid-2">
+  <div>
+    <ul>
+      <li><strong>Resource Management:</strong> Allocates CPU, memory, disk, and peripherals safely.</li>
+      <li><strong>User Interface:</strong> Provides GUI (graphical) or CLI (command line) for interaction.</li>
+      <li><strong>File Management:</strong> Organizes, reads, writes, and secures files on disk.</li>
+      <li><strong>Security & Access Control:</strong> Manages authentication and permissions.</li>
+    </ul>
+  </div>
+  <div>
+    <ul>
+      <li><strong>Task Scheduling & Multitasking:</strong> Schedules CPU time across programs.</li>
+      <li><strong>Device Management:</strong> Drivers coordinate hardware like printers & network cards.</li>
+      <li><strong>Networking:</strong> Enables computer communication and internet data sharing.</li>
+      <li><strong>Performance & Stability:</strong> Handles errors, exceptions, and maintains stability.</li>
+    </ul>
+  </div>
+</div>
+          `
+        },
+        {
+          id: "os-functions",
+          heading: "5 Core Functions of an OS",
+          content: `
+<div class="function-cards">
+  <div class="func-card">
+    <h4>1. Resource Management</h4>
+    <p>Allocates CPU time, memory space, and I/O devices to running applications without interference.</p>
+  </div>
+  <div class="func-card">
+    <h4>2. Process Management</h4>
+    <p>Handles the creation, scheduling, and termination of processes (e.g., launching and closing a browser).</p>
+  </div>
+  <div class="func-card">
+    <h4>3. Memory Management</h4>
+    <p>Controls allocation and deallocation of RAM space as programs start and terminate.</p>
+  </div>
+  <div class="func-card">
+    <h4>4. File System Management</h4>
+    <p>Manages file creation, deletion, access permissions, and tracks storage locations on disk.</p>
+  </div>
+  <div class="func-card">
+    <h4>5. Security & Access Control</h4>
+    <p>Protects system data from unauthorized access using user accounts, passwords, and permissions.</p>
+  </div>
+</div>
+          `
+        },
+        {
+          id: "types-of-os",
+          heading: "9 Types of Operating Systems",
+          content: `
+<div class="types-grid">
+  <div class="type-card">
+    <h4>1. Batch OS</h4>
+    <p>Executes grouped batches of jobs sequentially without user interaction.</p>
+    <span class="example-tag">Example: Early IBM Mainframes</span>
+  </div>
+  <div class="type-card">
+    <h4>2. Time-Sharing OS</h4>
+    <p>Rapidly switches CPU execution between multiple users to give the illusion of simultaneity.</p>
+    <span class="example-tag">Example: UNIX</span>
+  </div>
+  <div class="type-card">
+    <h4>3. Distributed OS</h4>
+    <p>Manages independent computers across a network so they appear as a single unified system.</p>
+    <span class="example-tag">Example: Apache Hadoop</span>
+  </div>
+  <div class="type-card">
+    <h4>4. Network OS (NOS)</h4>
+    <p>Provides services to networked clients (file sharing, printer access, security).</p>
+    <span class="example-tag">Example: Windows Server, Linux</span>
+  </div>
+  <div class="type-card">
+    <h4>5. Real-Time OS (RTOS)</h4>
+    <p>Processes incoming data within strict time constraints (timing is critical).</p>
+    <span class="example-tag">Example: VxWorks, FreeRTOS</span>
+  </div>
+  <div class="type-card">
+    <h4>6. Mobile OS</h4>
+    <p>Optimized for smartphones/tablets, touch UI, and wireless connectivity.</p>
+    <span class="example-tag">Example: Android, iOS</span>
+  </div>
+  <div class="type-card">
+    <h4>7. Embedded OS</h4>
+    <p>Designed for dedicated single-function computing hardware and appliances.</p>
+    <span class="example-tag">Example: Embedded Linux, QNX</span>
+  </div>
+  <div class="type-card">
+    <h4>8. Desktop OS</h4>
+    <p>User-friendly interface designed for personal computing tasks.</p>
+    <span class="example-tag">Example: Windows 11, macOS, Ubuntu</span>
+  </div>
+  <div class="type-card">
+    <h4>9. Server OS</h4>
+    <p>Optimized to manage and serve resources to multiple users/devices concurrently over networks.</p>
+    <span class="example-tag">Example: Windows Server, Red Hat (RHEL)</span>
+  </div>
+</div>
+          `
+        }
+      ]
+    },
+    {
+      id: "lesson-3",
+      title: "Lesson 3: Security & Compliance",
+      subtitle: "System Security, International Frameworks & PH Data Privacy Act",
+      category: "lesson3",
+      sections: [
+        {
+          id: "security-vs-compliance",
+          heading: "System Security vs. Compliance",
+          content: `
+<div class="grid-2">
+  <div class="info-card">
+    <h4>System Security</h4>
+    <p>Protecting systems against unauthorized access, data breaches, and cyber threats using firewalls, encryption, antivirus, and intrusion detection systems (IDS). Covers both physical security and cybersecurity.</p>
+  </div>
+  <div class="info-card">
+    <h4>Compliance</h4>
+    <p>Ensuring an organization adheres to legal and regulatory requirements governing information security. Requires regular audits, documentation, and staff training.</p>
+  </div>
+</div>
+
+<h4>Global Standards & Frameworks</h4>
+<ul>
+  <li><strong>GDPR (General Data Privacy Regulation):</strong> Protects EU residents' personal data & privacy, emphasizing user consent.</li>
+  <li><strong>HIPAA:</strong> Safeguards sensitive U.S. patient health information in healthcare.</li>
+  <li><strong>PCI-DSS:</strong> Establishes security requirements for credit card processing to prevent breaches.</li>
+  <li><strong>ISO/IEC 27001:</strong> International framework for Information Security Management Systems (ISMS).</li>
+  <li><strong>Data Privacy Act of 2012 (RA 10173):</strong> Philippine law protecting personal information in government & private sectors.</li>
+  <li><strong>Cybercrime Prevention Act of 2012 (RA 10175):</strong> Philippine legal framework combating cyber offenses.</li>
+</ul>
+          `
+        },
+        {
+          id: "data-privacy-act",
+          heading: "Data Privacy Act of 2012 (RA 10173) Deep-Dive",
+          content: `
+<p>The <strong>Data Privacy Act of 2012 (Republic Act No. 10173)</strong> protects personal information in IT and communication systems across both government and private sectors, establishing the <strong>National Privacy Commission (NPC)</strong>.</p>
+
+<h4>3 General Data Privacy Principles</h4>
+<div class="grid-3">
+  <div class="mini-card">
+    <h5>1. Transparency</h5>
+    <p>Data subjects must be informed about how their data is collected and processed.</p>
+  </div>
+  <div class="mini-card">
+    <h5>2. Legitimate Purpose</h5>
+    <p>Data must be collected for a specific, legitimate, and declared purpose.</p>
+  </div>
+  <div class="mini-card">
+    <h5>3. Proportionality</h5>
+    <p>Only collect data that is adequate and strictly necessary for the intended purpose.</p>
+  </div>
+</div>
+
+<h4>3 Security Measure Pillars</h4>
+<ul>
+  <li><strong>Organizational Security:</strong> Policies, DPO appointment, vendor compliance.</li>
+  <li><strong>Physical Security:</strong> Restricted physical access to servers & hardware facilities.</li>
+  <li><strong>Technical Security:</strong> Data encryption (at rest & in transit), role-based access controls.</li>
+</ul>
+
+<h4>4 Key Rights of Data Subjects</h4>
+<ol>
+  <li><strong>Right to be Informed:</strong> Notice before data collection.</li>
+  <li><strong>Right to Access:</strong> Inspect personal data held by organizations.</li>
+  <li><strong>Right to Rectification:</strong> Request correction of inaccurate data.</li>
+  <li><strong>Right to Erasure:</strong> Request deletion or blocking of personal data.</li>
+</ol>
+
+<div class="alert-box-spotify">
+  <strong>Critical 72-Hour Data Breach Rule:</strong> Organizations MUST notify the National Privacy Commission (NPC) and affected data subjects within <strong>72 hours</strong> of discovering a data breach!
+</div>
+          `
+        },
+        {
+          id: "pia-and-best-practices",
+          heading: "Privacy Impact Assessment (PIA) & Best Practices",
+          content: `
+<h4>Privacy Impact Assessment (PIA)</h4>
+<p>A process to identify and mitigate risks to personal data during projects/initiatives to ensure DPA compliance.</p>
+<ul>
+  <li><strong>Risk Identification:</strong> Assess data collection, storage, and usage risks.</li>
+  <li><strong>Mitigation Strategies:</strong> Develop technical and administrative controls.</li>
+  <li><strong>Stakeholder Involvement:</strong> Engage Data Protection Officers (DPOs) & key staff.</li>
+  <li><strong>Documentation:</strong> Maintain audit-ready compliance records.</li>
+  <li><strong>Continuous Review:</strong> Periodically update PIAs as projects evolve.</li>
+</ul>
+
+<h4>SysAdmin Best Practices for DPA Compliance</h4>
+<ol>
+  <li><strong>Data Inventory & Classification:</strong> Maintain asset logs and classify by sensitivity.</li>
+  <li><strong>Strong Access Control:</strong> Implement Role-Based Access Control (RBAC).</li>
+  <li><strong>Encryption:</strong> Mandatory encryption for data in transit (TLS/SSL) and at rest (AES-256).</li>
+  <li><strong>Incident Response Plan:</strong> Formulate and test response workflows for breaches.</li>
+  <li><strong>Employee Training:</strong> Conduct regular security awareness sessions.</li>
+  <li><strong>Third-Party Management:</strong> Audit third-party vendors handling company data.</li>
+</ol>
+          `
+        }
+      ]
+    }
+  ],
+
+  // Full 50-Item Question Bank (20 True/False, 30 Multiple Choice)
+  quizQuestions: [
+    // --- TRUE / FALSE SECTION (Items 1 - 20) ---
+    { id: 1, type: "tf", category: "lesson1", question: "System Administration deals with the operational management of human-computer systems.", options: ["True", "False"], answer: "True", explanation: "By definition, System Administration is a branch of engineering that manages human-computer systems, networks, and IT infrastructure." },
+    { id: 2, type: "tf", category: "lesson1", question: "Availability as a SysAdmin goal means that systems should only be accessible during standard working hours.", options: ["True", "False"], answer: "False", explanation: "Availability means systems are always accessible when needed by users, aiming for operational continuity." },
+    { id: 3, type: "tf", category: "lesson1", question: "Documentation is one of the 6 core principles of system administration.", options: ["True", "False"], answer: "True", explanation: "The 6 core principles are Reliability, Security, Scalability, Automation, Documentation, and Monitoring." },
+    { id: 4, type: "tf", category: "lesson1", question: "According to the Filipino Code of Ethics, IT professionals may disclose confidential information if authorized by their personal judgment.", options: ["True", "False"], answer: "False", explanation: "Item 7 specifies confidential information cannot be disclosed without consent of the concerned parties, except when required by law." },
+    { id: 5, type: "tf", category: "lesson1", question: "In the case study, SysAdmin Discaya restored the school LMS within 2 hours by rebooting and rolling back a failed update.", options: ["True", "False"], answer: "True", explanation: "Discaya diagnosed the crash via server logs, rolled back the weekend update, and restored LMS service in 2 hours." },
+    { id: 6, type: "tf", category: "lesson2", question: "An Operating System manages hardware resources like CPU, memory, disk space, and peripheral devices.", options: ["True", "False"], answer: "True", explanation: "Resource management is a primary function of an OS." },
+    { id: 7, type: "tf", category: "lesson2", question: "A Batch Operating System allows multiple users to interactively communicate with the CPU in real-time.", options: ["True", "False"], answer: "False", explanation: "Batch OS executes grouped jobs sequentially without user interaction (e.g. early IBM mainframes)." },
+    { id: 8, type: "tf", category: "lesson2", question: "UNIX is a classic example of a Time-Sharing Operating System.", options: ["True", "False"], answer: "True", explanation: "Time-Sharing OS rapidly switches CPU execution between users; UNIX is a primary example." },
+    { id: 9, type: "tf", category: "lesson2", question: "Apache Hadoop is an example of a Distributed Operating System.", options: ["True", "False"], answer: "True", explanation: "Hadoop coordinates multiple independent computers to work as a unified distributed system." },
+    { id: 10, type: "tf", category: "lesson2", question: "Real-Time Operating Systems (RTOS) are designed to process data within strict time constraints.", options: ["True", "False"], answer: "True", explanation: "RTOS like VxWorks and FreeRTOS operate under critical timing requirements." },
+    { id: 11, type: "tf", category: "lesson3", question: "System Security and Compliance refer to the exact same concept in IT management.", options: ["True", "False"], answer: "False", explanation: "Security focuses on protecting systems from cyber threats and unauthorized access, while Compliance focuses on adhering to legal and regulatory laws." },
+    { id: 12, type: "tf", category: "lesson3", question: "GDPR protects the personal data and privacy of European Union residents.", options: ["True", "False"], answer: "True", explanation: "GDPR (General Data Protection Regulation) is an EU data privacy law." },
+    { id: 13, type: "tf", category: "lesson3", question: "HIPAA is a standard that regulates credit card transaction security.", options: ["True", "False"], answer: "False", explanation: "PCI-DSS regulates credit card security; HIPAA safeguards U.S. healthcare patient data." },
+    { id: 14, type: "tf", category: "lesson3", question: "Republic Act No. 10173 is known as the Data Privacy Act of 2012 in the Philippines.", options: ["True", "False"], answer: "True", explanation: "RA 10173 is the official legislative law number of the Data Privacy Act of 2012." },
+    { id: 15, type: "tf", category: "lesson3", question: "The Proportionality principle under the Data Privacy Act means organizations should collect as much data as possible for future use.", options: ["True", "False"], answer: "False", explanation: "Proportionality mandates collecting only personal data that is strictly necessary for the declared purpose." },
+    { id: 16, type: "tf", category: "lesson3", question: "Organizations must report a data breach to the National Privacy Commission within 72 hours under the DPA.", options: ["True", "False"], answer: "True", explanation: "The DPA mandates breach notifications to the NPC and affected subjects within 72 hours." },
+    { id: 17, type: "tf", category: "lesson3", question: "Data Encryption should be applied both when data is in transit and when data is at rest.", options: ["True", "False"], answer: "True", explanation: "Technical security under DPA requires protecting data both during transmission and in storage." },
+    { id: 18, type: "tf", category: "lesson3", question: "A Privacy Impact Assessment (PIA) is conducted only once when a company is founded and never updated.", options: ["True", "False"], answer: "False", explanation: "PIAs require continuous review and regular updates as projects, technologies, and risks evolve." },
+    { id: 19, type: "tf", category: "lesson1", question: "Nagios and Zabbix are tools used in System Administration for Monitoring & Logging.", options: ["True", "False"], answer: "True", explanation: "Nagios and Zabbix are standard monitoring tools listed under the SysAdmin discipline." },
+    { id: 20, type: "tf", category: "lesson3", question: "The Cybercrime Prevention Act of 2012 in the Philippines is Republic Act No. 10175.", options: ["True", "False"], answer: "True", explanation: "RA 10175 establishes the legal framework for combating cybercrime in the Philippines." },
+
+    // --- MULTIPLE CHOICE SECTION (Items 21 - 50) ---
+    { id: 21, type: "mc", category: "lesson1", question: "Which of the following is NOT one of the 4 Key Goals of System Administration?", options: ["Availability", "Security", "Scalability", "Profitability"], answer: "Profitability", explanation: "The 4 key goals are Availability, Security, Efficiency, and Scalability." },
+    { id: 22, type: "mc", category: "lesson1", question: "Which SysAdmin discipline covers TCP/IP, DNS, and DHCP?", options: ["Operating Systems", "Networking", "Automation", "Monitoring"], answer: "Networking", explanation: "Networking involves network protocols like TCP/IP, DNS, and DHCP." },
+    { id: 23, type: "mc", category: "lesson1", question: "Which principle of System Administration focuses on reducing manual repetitive tasks using scripts?", options: ["Reliability", "Documentation", "Automation", "Scalability"], answer: "Automation", explanation: "Automation uses scripting and configuration management tools to eliminate repetitive manual work." },
+    { id: 24, type: "mc", category: "lesson1", question: "Under the Filipino Code of Ethics, which organization guidelines emphasize Integrity, Professionalism, and Confidentiality?", options: ["IEEE & ACM", "PCS & PICTO", "CHED & TESDA", "ISO & ANSI"], answer: "PCS & PICTO", explanation: "Guidelines from Philippine Computer Society (PCS) and PICTO provide these ethical anchors." },
+    { id: 25, type: "mc", category: "lesson1", question: "In the case study, what caused the school LMS server to crash over the weekend?", options: ["DDoS Cyberattack", "Hardware Hard Drive Failure", "Failed Weekend Update", "Power Outage"], answer: "Failed Weekend Update", explanation: "Discaya checked server logs and found the crash was triggered by an automatic update failure over the weekend." },
+    { id: 26, type: "mc", category: "lesson2", question: "Which OS function handles process creation, CPU scheduling, and process termination?", options: ["Memory Management", "Process Management", "File System Management", "Device Management"], answer: "Process Management", explanation: "Process Management manages active applications from execution startup to process termination." },
+    { id: 27, type: "mc", category: "lesson2", question: "Which type of Operating System operates on specialized dedicated computing hardware like smart appliances?", options: ["Embedded OS", "Desktop OS", "Batch OS", "Time-Sharing OS"], answer: "Embedded OS", explanation: "Embedded OS (e.g. Embedded Linux, QNX) is designed for dedicated appliances and single-purpose hardware." },
+    { id: 28, type: "mc", category: "lesson2", question: "VxWorks and FreeRTOS are examples of which type of Operating System?", options: ["Mobile OS", "Real-Time Operating System (RTOS)", "Network OS", "Distributed OS"], answer: "Real-Time Operating System (RTOS)", explanation: "VxWorks and FreeRTOS are prominent examples of Real-Time Operating Systems." },
+    { id: 29, type: "mc", category: "lesson2", question: "An OS interface that uses visual icons, windows, and pointer interactions is called a:", options: ["CLI", "API", "GUI", "POSIX"], answer: "GUI", explanation: "GUI stands for Graphical User Interface." },
+    { id: 30, type: "mc", category: "lesson2", question: "Which Operating System type provides file sharing, printer sharing, and user security services over a local network?", options: ["Network Operating System (NOS)", "Batch OS", "Embedded OS", "Real-Time OS"], answer: "Network Operating System (NOS)", explanation: "Network OS (like Windows Server or Linux) serves network resource sharing." },
+    { id: 31, type: "mc", category: "lesson3", question: "Which international security standard provides a comprehensive framework for an Information Security Management System (ISMS)?", options: ["PCI-DSS", "ISO/IEC 27001", "HIPAA", "GDPR"], answer: "ISO/IEC 27001", explanation: "ISO 27001 sets requirements for establishing and maintaining an ISMS." },
+    { id: 32, type: "mc", category: "lesson3", question: "What government body in the Philippines oversees and enforces compliance with the Data Privacy Act of 2012?", options: ["Department of Information and Communications Technology (DICT)", "National Privacy Commission (NPC)", "National Telecommunications Commission (NTC)", "Cybercrime Investigation Center"], answer: "National Privacy Commission (NPC)", explanation: "The NPC is established under RA 10173 to enforce data privacy laws." },
+    { id: 33, type: "mc", category: "lesson3", question: "Which general data privacy principle requires informing individuals clearly about how their data will be collected and processed?", options: ["Transparency", "Legitimate Purpose", "Proportionality", "Accountability"], answer: "Transparency", explanation: "Transparency mandates clear notification to data subjects regarding data processing." },
+    { id: 34, type: "mc", category: "lesson3", question: "Which pillar of DPA security measures includes physical locks, security guards, and restricted facility access?", options: ["Technical Security", "Organizational Security", "Physical Security", "Legal Security"], answer: "Physical Security", explanation: "Physical Security protects hardware and physical server locations." },
+    { id: 35, type: "mc", category: "lesson3", question: "Under the Data Privacy Act, data subjects have the right to request correction of inaccurate personal records. This is known as the:", options: ["Right to Access", "Right to Rectification", "Right to Erasure", "Right to Portability"], answer: "Right to Rectification", explanation: "Right to Rectification allows individuals to correct inaccurate or outdated data." },
+    { id: 36, type: "mc", category: "lesson3", question: "What does PIA stand for in system security and compliance?", options: ["Public Information Access", "Privacy Impact Assessment", "Personal Identity Authentication", "Protocol Inspection Architecture"], answer: "Privacy Impact Assessment", explanation: "PIA evaluates data privacy risks in projects and systems." },
+    { id: 37, type: "mc", category: "lesson1", question: "Which duty in the Filipino IT Code of Ethics strictly prohibits participating in systems that promote fraud?", options: ["Item 3", "Item 7", "Item 9", "Item 10"], answer: "Item 9", explanation: "Item 9 states IT professionals will not knowingly participate in systems promoting fraud or unlawful acts." },
+    { id: 38, type: "mc", category: "lesson2", question: "Which OS function manages RAM space allocation when programs launch and closes memory when programs exit?", options: ["File Management", "Memory Management", "Process Management", "Security Management"], answer: "Memory Management", explanation: "Memory Management controls RAM allocation and deallocation." },
+    { id: 39, type: "mc", category: "lesson2", question: "Red Hat Enterprise Linux (RHEL) and Windows Server are categorized primarily as:", options: ["Mobile OS", "Server Operating Systems", "Embedded OS", "Batch OS"], answer: "Server Operating Systems", explanation: "RHEL and Windows Server are enterprise server operating systems." },
+    { id: 40, type: "mc", category: "lesson3", question: "Which global regulation specifically safeguards patient health information in the United States?", options: ["GDPR", "HIPAA", "PCI-DSS", "SOX"], answer: "HIPAA", explanation: "HIPAA protects healthcare patient data in the US." },
+    { id: 41, type: "mc", category: "lesson3", question: "Which data subject right allows an individual to request the complete deletion of their personal data under specific conditions?", options: ["Right to Erasure", "Right to Access", "Right to be Informed", "Right to Rectification"], answer: "Right to Erasure", explanation: "Right to Erasure (or Right to Blocking/Deletion) allows data removal request." },
+    { id: 42, type: "mc", category: "lesson1", question: "What is the primary responsibility of a System Administrator regarding user accounts?", options: ["Writing user software applications", "Account creation and access permission management", "Designing user interfaces", "Auditing employee salaries"], answer: "Account creation and access permission management", explanation: "SysAdmins manage user accounts and access credentials." },
+    { id: 43, type: "mc", category: "lesson2", question: "Which OS type switches CPU time rapidly between multiple connected users to give an illusion of parallel processing?", options: ["Time-Sharing Operating System", "Batch Operating System", "Embedded Operating System", "Single-User OS"], answer: "Time-Sharing Operating System", explanation: "Time-Sharing systems switch rapidly between user tasks." },
+    { id: 44, type: "mc", category: "lesson3", question: "Under the Data Privacy Act of 2012, mandatory technical security includes:", options: ["Data Encryption in transit and at rest", "Only using paper documents", "Disabling internet connections", "Deleting logs every 24 hours"], answer: "Data Encryption in transit and at rest", explanation: "Technical security requires encrypting data both in transit and stored at rest." },
+    { id: 45, type: "mc", category: "lesson1", question: "Which principle of System Administration focuses on maintaining detailed records of server configurations and system changes?", options: ["Reliability", "Documentation", "Scalability", "Monitoring"], answer: "Documentation", explanation: "Documentation maintains clear records of configurations and procedures." },
+    { id: 46, type: "mc", category: "lesson2", question: "Android and iOS belong to which Operating System category?", options: ["Desktop OS", "Mobile Operating Systems", "Distributed OS", "Batch OS"], answer: "Mobile Operating Systems", explanation: "Android and iOS are mobile operating systems optimized for touch devices." },
+    { id: 47, type: "mc", category: "lesson3", question: "Which standard establishes strict security rules for organizations processing credit card payments?", options: ["PCI-DSS", "ISO 9001", "GDPR", "HIPAA"], answer: "PCI-DSS", explanation: "Payment Card Industry Data Security Standard (PCI-DSS) governs credit card data." },
+    { id: 48, type: "mc", category: "lesson1", question: "In the case study, how did SysAdmin Discaya prevent future update crashes?", options: ["By banning all updates permanently", "By documenting the incident and scheduling safer update processes", "By firing the teachers", "By switching to a paper system"], answer: "By documenting the incident and scheduling safer update processes", explanation: "Discaya documented the event and instituted safer off-peak update testing workflows." },
+    { id: 49, type: "mc", category: "lesson2", question: "What hardware component handles instruction processing that the OS schedules via Process Management?", options: ["RAM", "CPU", "Hard Drive", "Network Card"], answer: "CPU", explanation: "The OS schedules CPU execution time for processes." },
+    { id: 50, type: "mc", category: "lesson3", question: "Role-Based Access Control (RBAC) enforces which security principle?", options: ["Least Privilege & Authorized Access", "Public Access to all files", "Disabling passwords", "Unrestricted admin rights for all users"], answer: "Least Privilege & Authorized Access", explanation: "RBAC ensures users only access data necessary for their specific roles." }
+  ],
+
+  // 36 Interactive Flashcards
+  flashcards: [
+    { id: 1, category: "lesson1", term: "System Administration", definition: "Branch of engineering dealing with operational management of human-computer systems, ensuring efficiency, security, and reliability." },
+    { id: 2, category: "lesson1", term: "SysAdmin", definition: "System Administrator responsible for upkeep, configuration, and reliable operation of computer systems & servers." },
+    { id: 3, category: "lesson1", term: "Availability Goal", definition: "Ensuring IT systems and resources are consistently accessible to users whenever needed." },
+    { id: 4, category: "lesson1", term: "Scalability", definition: "Designing and configuring infrastructure to seamlessly handle future growth in data and users." },
+    { id: 5, category: "lesson1", term: "Nagios / Zabbix", definition: "Popular IT infrastructure tools used by SysAdmins for real-time Monitoring & Logging." },
+    { id: 6, category: "lesson1", term: "6 SysAdmin Principles", definition: "Reliability, Security, Scalability, Automation, Documentation, and Monitoring." },
+    { id: 7, category: "lesson1", term: "IT Ethics Code Item 7", definition: "Prohibits disclosing confidential information obtained during duties without consent unless required by law." },
+    { id: 8, category: "lesson1", term: "IT Ethics Code Item 9", definition: "Prohibits knowingly participating in IT systems that promote fraud or unlawful acts." },
+    { id: 9, category: "lesson1", term: "PCS & PICTO Pillars", definition: "Integrity, Professionalism, Confidentiality, Accountability, Respect for IP, Social Responsibility." },
+    { id: 10, category: "lesson1", term: "Case Study (Discaya)", definition: "SysAdmin restored crashed school LMS in 2 hours by log diagnosis, rollback, and backup verification." },
+    { id: 11, category: "lesson2", term: "Operating System (OS)", definition: "Master software managing hardware/software resources and providing services for applications." },
+    { id: 12, category: "lesson2", term: "Process Management", definition: "OS function handling process creation, CPU scheduling, execution, and termination." },
+    { id: 13, category: "lesson2", term: "Memory Management", definition: "OS function allocating and deallocating RAM space as software programs run and exit." },
+    { id: 14, category: "lesson2", term: "File System Management", definition: "OS function controlling file creation, deletion, security access, and disk storage tracking." },
+    { id: 15, category: "lesson2", term: "GUI vs CLI", definition: "Graphical User Interface (visual windows/icons) vs Command-Line Interface (text command prompt)." },
+    { id: 16, category: "lesson2", term: "Batch OS", definition: "Executes grouped job batches sequentially without interactive user involvement (e.g. IBM mainframes)." },
+    { id: 17, category: "lesson2", term: "Time-Sharing OS", definition: "Rapidly switches CPU execution between multiple users for concurrent execution illusion (e.g. UNIX)." },
+    { id: 18, category: "lesson2", term: "Distributed OS", definition: "Manages a cluster of independent networked computers so they function as one system (e.g. Hadoop)." },
+    { id: 19, category: "lesson2", term: "Network OS (NOS)", definition: "Provides networked services such as remote file access, printer sharing, and security (e.g. Windows Server)." },
+    { id: 20, category: "lesson2", term: "Real-Time OS (RTOS)", definition: "Processes incoming data under strict, deterministic time constraints (e.g. VxWorks, FreeRTOS)." },
+    { id: 21, category: "lesson2", term: "Embedded OS", definition: "Operates inside dedicated specialized single-function appliances (e.g. Embedded Linux, QNX)." },
+    { id: 22, category: "lesson2", term: "Server OS", definition: "OS optimized to serve and manage network requests for multiple clients (e.g. RHEL, Windows Server)." },
+    { id: 23, category: "lesson3", term: "System Security", definition: "Protecting systems against unauthorized access, breaches, and cyber threats using technical & physical controls." },
+    { id: 24, category: "lesson3", term: "Compliance", definition: "Ensuring an organization adheres strictly to laws, standards, and regulatory privacy mandates." },
+    { id: 25, category: "lesson3", term: "GDPR", definition: "General Data Protection Regulation protecting privacy and personal data rights of EU residents." },
+    { id: 26, category: "lesson3", term: "HIPAA", definition: "U.S. federal law safeguarding sensitive patient health information in healthcare systems." },
+    { id: 27, category: "lesson3", term: "PCI-DSS", definition: "Security standard establishing requirements for organizations processing credit card transactions." },
+    { id: 28, category: "lesson3", term: "ISO/IEC 27001", definition: "Global framework for implementing and managing an Information Security Management System (ISMS)." },
+    { id: 29, category: "lesson3", term: "Data Privacy Act of 2012", definition: "Republic Act No. 10173 protecting personal data privacy in Philippine government & private sectors." },
+    { id: 30, category: "lesson3", term: "National Privacy Commission (NPC)", definition: "Philippine regulatory body enforcing compliance with the Data Privacy Act of 2012." },
+    { id: 31, category: "lesson3", term: "Transparency Principle", definition: "DPA principle requiring data subjects to be fully informed about data collection and processing." },
+    { id: 32, category: "lesson3", term: "Proportionality Principle", definition: "DPA principle requiring organizations to collect only data strictly necessary for declared purposes." },
+    { id: 33, category: "lesson3", term: "72-Hour Breach Rule", definition: "Mandate to report security data breaches to NPC and affected individuals within 72 hours." },
+    { id: 34, category: "lesson3", term: "Right to Rectification", definition: "Data subject right allowing individuals to request correction of inaccurate personal records." },
+    { id: 35, category: "lesson3", term: "Right to Erasure", definition: "Data subject right allowing individuals to demand deletion of personal data under valid conditions." },
+    { id: 36, category: "lesson3", term: "Privacy Impact Assessment (PIA)", definition: "Structured evaluation process to identify and mitigate personal data privacy risks in systems." }
+  ]
+};
+
+/**
+ * Main Application Logic
+ */
+document.addEventListener("DOMContentLoaded", () => {
+  const CATEGORY_NAMES = {
+    all: "All Topics",
+    lesson1: "Lesson 1: SysAdmin & Ethics",
+    lesson2: "Lesson 2: OS Concepts & Types",
+    lesson3: "Lesson 3: Security & DPA"
+  };
+
+  const state = {
+    currentTab: localStorage.getItem("sysadmin_active_tab") || "reviewer",
+    activeCategory: localStorage.getItem("sysadmin_active_category") || "all",
+    searchQuery: "",
+    
+    // Highlighting State
+    activeColor: localStorage.getItem("sysadmin_active_color") || "yellow",
+    highlights: JSON.parse(localStorage.getItem("sysadmin_highlights") || "[]"),
+    
+    // Full Quiz State (Pre-Quiz Selection & Locked Category)
+    fullQuizCategory: localStorage.getItem("sysadmin_full_quiz_category") || "all",
+    fullQuizStarted: localStorage.getItem("sysadmin_full_quiz_started") === "true",
+    fullQuizQuestions: JSON.parse(localStorage.getItem("sysadmin_full_quiz_questions") || "null"),
+    fullQuizAnswers: JSON.parse(localStorage.getItem("sysadmin_full_quiz_answers") || "{}"),
+    fullQuizScore: 0,
+    
+    // Quick Quiz State (10 Items, 5s Linear Timer, Locked Category)
+    quickQuizCategory: "all",
+    quickQuizStarted: false,
+    quickQuizQuestions: [],
+    quickQuizCurrentIndex: 0,
+    quickQuizAnswers: {},
+    quickQuizTimer: null,
+    quickQuizTimeLeft: 5,
+    quickQuizActive: false,
+    quickQuizStats: JSON.parse(localStorage.getItem("sysadmin_quick_quiz_stats") || '{"bestScore":0,"attempts":0,"lastScore":0}'),
+    
+    // Flashcard State
+    flashcardsCategory: localStorage.getItem("sysadmin_fc_category") || "all",
+    flashcardsList: [],
+    flashcardCurrentIndex: parseInt(localStorage.getItem("sysadmin_fc_index") || "0", 10),
+    isCardFlipped: false,
+    masteredCards: new Set(JSON.parse(localStorage.getItem("sysadmin_mastered_fc") || "[]")),
+    filterUnmasteredOnly: localStorage.getItem("sysadmin_fc_filter_unmastered") === "true"
+  };
+
+  function shuffleArray(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function initNavigation() {
+    const tabBtns = document.querySelectorAll(".tab-btn");
+    tabBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const targetTab = btn.getAttribute("data-tab");
+        switchTab(targetTab);
+      });
+    });
+  }
+
+  function switchTab(tabId) {
+    state.currentTab = tabId;
+    localStorage.setItem("sysadmin_active_tab", tabId);
+    
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.classList.toggle("active", btn.getAttribute("data-tab") === tabId);
+    });
+
+    document.querySelectorAll(".tab-view").forEach(view => {
+      view.classList.toggle("active", view.id === `tab-${tabId}`);
+    });
+
+    if (tabId !== "quick-quiz" && state.quickQuizTimer) {
+      clearInterval(state.quickQuizTimer);
+      state.quickQuizActive = false;
+    }
+
+    if (tabId === "reviewer") {
+      renderReviewerContent();
+    } else if (tabId === "full-quiz") {
+      if (state.fullQuizStarted && state.fullQuizQuestions && state.fullQuizQuestions.length > 0) {
+        document.getElementById("full-quiz-setup").style.display = "none";
+        document.getElementById("full-quiz-active").style.display = "block";
+        updateFullQuizLockedBadge();
+        renderFullQuiz();
+      } else {
+        document.getElementById("full-quiz-setup").style.display = "block";
+        document.getElementById("full-quiz-active").style.display = "none";
+        updateFullQuizSetupUI();
+      }
+    } else if (tabId === "quick-quiz") {
+      if (state.quickQuizStarted && state.quickQuizActive && state.quickQuizQuestions.length > 0) {
+        document.getElementById("quick-quiz-setup").style.display = "none";
+        document.getElementById("quick-quiz-active").style.display = "block";
+      } else {
+        document.getElementById("quick-quiz-setup").style.display = "block";
+        document.getElementById("quick-quiz-active").style.display = "none";
+        updateQuickQuizSetupUI();
+      }
+    } else if (tabId === "flashcards") {
+      initFlashcards();
+    }
+  }
+
+  function renderReviewerContent() {
+    const container = document.getElementById("reviewer-content-container");
+    if (!container) return;
+
+    let html = "";
+    
+    REVIEWER_CONTENT.lessons.forEach(lesson => {
+      if (state.activeCategory !== "all" && lesson.category !== state.activeCategory) {
+        return;
+      }
+
+      html += `
+        <article class="lesson-card" id="${lesson.id}">
+          <header class="lesson-header">
+            <h2>${lesson.title}</h2>
+            <p>${lesson.subtitle}</p>
+          </header>
+          <div class="lesson-body">
+      `;
+
+      lesson.sections.forEach(section => {
+        if (state.searchQuery) {
+          const text = (section.heading + " " + section.content).toLowerCase();
+          if (!text.includes(state.searchQuery.toLowerCase())) {
+            return;
+          }
+        }
+
+        html += `
+          <div class="section-block" id="${section.id}">
+            <h3>${section.heading}</h3>
+            <div class="section-content">${section.content}</div>
+          </div>
+        `;
+      });
+
+      html += `
+          </div>
+        </article>
+      `;
+    });
+
+    if (html === "") {
+      html = `<div class="info-card"><p>No topics match your current filter/search query.</p></div>`;
+    }
+
+    container.innerHTML = html;
+    restoreHighlights();
+  }
+
+  // Helper to highlight a sub-slice of a single text node
+  function highlightTextNodeRange(node, start, end, color, highlightId) {
+    if (!node || node.nodeType !== Node.TEXT_NODE) return null;
+    if (start >= end) return null;
+
+    const fullText = node.nodeValue;
+    const beforeText = fullText.substring(0, start);
+    const selectedText = fullText.substring(start, end);
+    const afterText = fullText.substring(end);
+
+    const mark = document.createElement("mark");
+    mark.className = `hl-${color}`;
+    mark.setAttribute("data-hl-id", highlightId);
+    mark.textContent = selectedText;
+
+    const parent = node.parentNode;
+    if (!parent) return null;
+
+    if (afterText) {
+      parent.insertBefore(document.createTextNode(afterText), node.nextSibling);
+    }
+    parent.insertBefore(mark, node.nextSibling);
+    if (beforeText) {
+      node.nodeValue = beforeText;
+    } else {
+      parent.removeChild(node);
+    }
+
+    attachEraserEvent(mark);
+    return mark;
+  }
+
+  // Multi-node safe highlighting engine
+  function highlightRange(range, color, highlightId) {
+    if (!range || range.collapsed) return;
+
+    const startNode = range.startContainer;
+    const endNode = range.endContainer;
+    const startOffset = range.startOffset;
+    const endOffset = range.endOffset;
+
+    // Single text node selection
+    if (startNode === endNode && startNode.nodeType === Node.TEXT_NODE) {
+      highlightTextNodeRange(startNode, startOffset, endOffset, color, highlightId);
+      return;
+    }
+
+    // Spanning multiple nodes: traverse text nodes
+    const ancestor = range.commonAncestorContainer;
+    const rootNode = ancestor.nodeType === Node.TEXT_NODE ? ancestor.parentNode : ancestor;
+
+    const walker = document.createTreeWalker(
+      rootNode,
+      NodeFilter.SHOW_TEXT,
+      {
+        acceptNode: function(node) {
+          if (!range.intersectsNode(node)) return NodeFilter.FILTER_REJECT;
+          if (node.nodeValue.length === 0) return NodeFilter.FILTER_SKIP;
+          const p = node.parentElement;
+          if (p && (p.closest(".fab-container") || p.closest("script") || p.closest("style") || p.closest("button") || p.closest("input"))) {
+            return NodeFilter.FILTER_REJECT;
+          }
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      }
+    );
+
+    const nodesToProcess = [];
+    while (walker.nextNode()) {
+      nodesToProcess.push(walker.currentNode);
+    }
+
+    nodesToProcess.forEach(node => {
+      let s = 0;
+      let e = node.nodeValue.length;
+
+      if (node === startNode) {
+        s = startOffset;
+      }
+      if (node === endNode) {
+        e = endOffset;
+      }
+
+      highlightTextNodeRange(node, s, e, color, highlightId);
+    });
+  }
+
+  function handleGlobalSelection(targetColor) {
+    const colorToApply = targetColor || state.activeColor;
+    if (!colorToApply || colorToApply === "erase") return;
+
+    const selection = window.getSelection();
+    if (!selection || selection.isCollapsed) return;
+
+    const selectedText = selection.toString().trim();
+    if (selectedText.length < 1) return;
+
+    try {
+      const range = selection.getRangeAt(0);
+      const containerNode = range.commonAncestorContainer;
+      const parentEl = containerNode.nodeType === 3 ? containerNode.parentElement : containerNode;
+
+      if (parentEl.closest(".fab-container") || parentEl.closest("button") || parentEl.closest("input") || parentEl.closest("textarea") || parentEl.closest("script")) {
+        return;
+      }
+
+      const highlightId = "hl_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5);
+      highlightRange(range, colorToApply, highlightId);
+      selection.removeAllRanges();
+
+      state.highlights.push({
+        id: highlightId,
+        text: selectedText,
+        color: colorToApply
+      });
+
+      localStorage.setItem("sysadmin_highlights", JSON.stringify(state.highlights));
+    } catch (e) {
+      console.warn("Could not wrap text selection cleanly:", e);
+    }
+  }
+
+  function attachEraserEvent(markElement) {
+    markElement.addEventListener("click", (e) => {
+      if (state.activeColor === "erase") {
+        e.stopPropagation();
+        const id = markElement.getAttribute("data-hl-id");
+        state.highlights = state.highlights.filter(h => h.id !== id);
+        localStorage.setItem("sysadmin_highlights", JSON.stringify(state.highlights));
+
+        // Remove all marks associated with this id
+        document.querySelectorAll(`mark[data-hl-id="${id}"]`).forEach(m => {
+          const parent = m.parentNode;
+          if (parent) {
+            while (m.firstChild) {
+              parent.insertBefore(m.firstChild, m);
+            }
+            parent.removeChild(m);
+          }
+        });
+      }
+    });
+  }
+
+  function findTextRange(root, searchText) {
+    if (!root || !searchText || searchText.length < 2) return null;
+
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(node) {
+        const p = node.parentElement;
+        if (p && (p.closest(".fab-container") || p.closest("script") || p.closest("button") || p.closest("input"))) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+
+    let fullText = "";
+    const nodes = [];
+    const starts = [];
+
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      nodes.push(node);
+      starts.push(fullText.length);
+      fullText += node.nodeValue;
+    }
+
+    const matchIndex = fullText.indexOf(searchText);
+    if (matchIndex === -1) return null;
+
+    const matchEnd = matchIndex + searchText.length;
+    let startNode = null, startOffset = 0, endNode = null, endOffset = 0;
+
+    for (let i = 0; i < nodes.length; i++) {
+      const nodeStart = starts[i];
+      const nodeEnd = nodeStart + nodes[i].nodeValue.length;
+
+      if (!startNode && matchIndex >= nodeStart && matchIndex < nodeEnd) {
+        startNode = nodes[i];
+        startOffset = matchIndex - nodeStart;
+      }
+      if (matchEnd > nodeStart && matchEnd <= nodeEnd) {
+        endNode = nodes[i];
+        endOffset = matchEnd - nodeStart;
+        break;
+      }
+    }
+
+    if (startNode && endNode) {
+      const range = document.createRange();
+      range.setStart(startNode, startOffset);
+      range.setEnd(endNode, endOffset);
+      return range;
+    }
+
+    return null;
+  }
+
+  function restoreHighlights() {
+    // 1. Attach eraser handlers to existing marks
+    document.querySelectorAll("mark[data-hl-id]").forEach(mark => {
+      attachEraserEvent(mark);
+    });
+
+    // 2. Re-apply highlights to newly rendered content
+    if (!state.highlights || state.highlights.length === 0) return;
+
+    const container = document.getElementById("reviewer-content-container");
+    if (!container) return;
+
+    state.highlights.forEach(hl => {
+      if (!hl.text || hl.text.length < 2) return;
+      if (container.querySelector(`mark[data-hl-id="${hl.id}"]`)) return;
+
+      const range = findTextRange(container, hl.text);
+      if (range) {
+        highlightRange(range, hl.color, hl.id);
+      }
+    });
+  }
+
+  function initHighlighterControls() {
+    const swatches = document.querySelectorAll(".swatch-btn");
+    const eraserBtn = document.getElementById("eraser-btn");
+    const clearAllBtn = document.getElementById("clear-all-hl-btn");
+    const fabMainBtn = document.getElementById("fab-main-btn");
+    const fabContainer = document.getElementById("fab-highlighter");
+
+    if (fabMainBtn && fabContainer) {
+      fabMainBtn.addEventListener("click", () => {
+        fabContainer.classList.toggle("open");
+      });
+    }
+
+    swatches.forEach(swatch => {
+      // Prevent losing text selection on mousedown
+      swatch.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+      });
+
+      swatch.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const chosenColor = swatch.getAttribute("data-color");
+        state.activeColor = chosenColor;
+
+        swatches.forEach(s => s.classList.remove("active"));
+        if (eraserBtn) eraserBtn.classList.remove("active");
+        swatch.classList.add("active");
+
+        handleGlobalSelection(chosenColor);
+      });
+    });
+
+    if (eraserBtn) {
+      eraserBtn.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+      });
+      eraserBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        state.activeColor = "erase";
+        swatches.forEach(s => s.classList.remove("active"));
+        eraserBtn.classList.add("active");
+      });
+    }
+
+    if (clearAllBtn) {
+      clearAllBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (confirm("Clear all text highlights across the page?")) {
+          state.highlights = [];
+          localStorage.removeItem("sysadmin_highlights");
+          document.querySelectorAll("mark[data-hl-id]").forEach(mark => {
+            const parent = mark.parentNode;
+            if (parent) {
+              while (mark.firstChild) {
+                parent.insertBefore(mark.firstChild, mark);
+              }
+              parent.removeChild(mark);
+            }
+          });
+        }
+      });
+    }
+
+    document.addEventListener("mouseup", (e) => {
+      if (e.target.closest(".fab-container")) return;
+      handleGlobalSelection();
+    });
+  }
+
+  function updateFullQuizSetupUI() {
+    const opts = document.querySelectorAll("#full-quiz-cat-options .setup-cat-opt");
+    opts.forEach(btn => {
+      btn.classList.toggle("active", btn.getAttribute("data-category") === state.fullQuizCategory);
+    });
+  }
+
+  function updateFullQuizLockedBadge() {
+    const badge = document.getElementById("full-quiz-locked-badge");
+    if (badge) {
+      badge.innerHTML = `🔒 Category Locked: <strong>${CATEGORY_NAMES[state.fullQuizCategory] || "All Topics"}</strong>`;
+    }
+  }
+
+  function startFullQuiz(freshRestart = true) {
+    const pool = REVIEWER_CONTENT.quizQuestions.filter(q => {
+      return state.fullQuizCategory === "all" || q.category === state.fullQuizCategory;
+    });
+
+    state.fullQuizQuestions = shuffleArray(pool).map(q => {
+      if (q.type === "mc") {
+        return { ...q, options: shuffleArray(q.options) };
+      }
+      return q;
+    });
+
+    state.fullQuizAnswers = {};
+    state.fullQuizScore = 0;
+    state.fullQuizStarted = true;
+
+    localStorage.setItem("sysadmin_full_quiz_started", "true");
+    localStorage.setItem("sysadmin_full_quiz_category", state.fullQuizCategory);
+    localStorage.setItem("sysadmin_full_quiz_questions", JSON.stringify(state.fullQuizQuestions));
+    localStorage.setItem("sysadmin_full_quiz_answers", JSON.stringify(state.fullQuizAnswers));
+
+    const setupView = document.getElementById("full-quiz-setup");
+    const activeView = document.getElementById("full-quiz-active");
+    if (setupView) setupView.style.display = "none";
+    if (activeView) activeView.style.display = "block";
+
+    updateFullQuizLockedBadge();
+    renderFullQuiz();
+  }
+
+  function renderFullQuiz() {
+    const container = document.getElementById("full-quiz-container");
+    const scoreVal = document.getElementById("full-quiz-score");
+    const totalVal = document.getElementById("full-quiz-total");
+    if (!container) return;
+
+    const questionsList = state.fullQuizQuestions || [];
+
+    if (totalVal) totalVal.textContent = questionsList.length;
+    if (scoreVal) scoreVal.textContent = calculateScore(questionsList);
+
+    let html = "";
+    questionsList.forEach((q, index) => {
+      const isAnswered = state.fullQuizAnswers[q.id] !== undefined;
+      const userAnswer = state.fullQuizAnswers[q.id];
+      const isCorrect = isAnswered && userAnswer === q.answer;
+
+      let itemClass = "question-item";
+      if (isAnswered) {
+        itemClass += isCorrect ? " correct-answered" : " wrong-answered";
+      }
+
+      html += `
+        <div class="${itemClass}" id="fq-item-${q.id}">
+          <div class="q-meta">
+            <span class="q-badge">${q.type === "tf" ? "True / False" : "Multiple Choice"}</span>
+            <span class="q-num">Question ${index + 1} of ${questionsList.length}</span>
+          </div>
+          <div class="q-text">${q.question}</div>
+          <div class="options-grid">
+      `;
+
+      q.options.forEach((opt, optIdx) => {
+        let btnClass = "option-btn";
+        const prefixChar = String.fromCharCode(65 + optIdx);
+
+        if (isAnswered) {
+          if (opt === q.answer) {
+            btnClass += " correct";
+          } else if (opt === userAnswer && userAnswer !== q.answer) {
+            btnClass += " wrong";
+          }
+        } else if (userAnswer === opt) {
+          btnClass += " selected";
+        }
+
+        html += `
+          <button class="${btnClass}" ${isAnswered ? "disabled" : ""} onclick="handleFullQuizAnswer(${q.id}, '${escapeQuote(opt)}')">
+            <span class="opt-prefix">${prefixChar}</span>
+            <span>${opt}</span>
+          </button>
+        `;
+      });
+
+      html += `
+          </div>
+          <div class="explanation-box ${isAnswered ? "visible" : ""}">
+            <strong>Explanation:</strong> ${q.explanation}
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
+
+  function calculateScore(questionsList) {
+    let score = 0;
+    questionsList.forEach(q => {
+      if (state.fullQuizAnswers[q.id] === q.answer) {
+        score++;
+      }
+    });
+    return score;
+  }
+
+  function escapeQuote(str) {
+    return str.replace(/'/g, "\\'");
+  }
+
+  window.handleFullQuizAnswer = function(questionId, selectedOpt) {
+    state.fullQuizAnswers[questionId] = selectedOpt;
+    localStorage.setItem("sysadmin_full_quiz_answers", JSON.stringify(state.fullQuizAnswers));
+    renderFullQuiz();
+  };
+
+  function updateQuickQuizSetupUI() {
+    const opts = document.querySelectorAll("#quick-quiz-cat-options .setup-cat-opt");
+    opts.forEach(btn => {
+      btn.classList.toggle("active", btn.getAttribute("data-category") === state.quickQuizCategory);
+    });
+  }
+
+  function updateQuickQuizLockedBadge() {
+    const badge = document.getElementById("quick-quiz-locked-badge");
+    if (badge) {
+      badge.innerHTML = `🔒 Speed Round: <strong>${CATEGORY_NAMES[state.quickQuizCategory] || "All Topics"}</strong> (Locked)`;
+    }
+  }
+
+  function startQuickQuiz() {
+    if (state.quickQuizTimer) clearInterval(state.quickQuizTimer);
+
+    const pool = REVIEWER_CONTENT.quizQuestions.filter(q => {
+      return state.quickQuizCategory === "all" || q.category === state.quickQuizCategory;
+    });
+
+    state.quickQuizQuestions = shuffleArray(pool).slice(0, 10).map(q => {
+      if (q.type === "mc") {
+        return { ...q, options: shuffleArray(q.options) };
+      }
+      return q;
+    });
+
+    state.quickQuizCurrentIndex = 0;
+    state.quickQuizAnswers = {};
+    state.quickQuizActive = true;
+    state.quickQuizStarted = true;
+
+    const setupView = document.getElementById("quick-quiz-setup");
+    const activeView = document.getElementById("quick-quiz-active");
+    if (setupView) setupView.style.display = "none";
+    if (activeView) activeView.style.display = "block";
+
+    updateQuickQuizLockedBadge();
+    startQuickQuizQuestion();
+  }
+
+  window.quitQuickQuizToSetup = function() {
+    if (state.quickQuizTimer) clearInterval(state.quickQuizTimer);
+    state.quickQuizActive = false;
+    state.quickQuizStarted = false;
+
+    const setupView = document.getElementById("quick-quiz-setup");
+    const activeView = document.getElementById("quick-quiz-active");
+    if (setupView) setupView.style.display = "block";
+    if (activeView) activeView.style.display = "none";
+    updateQuickQuizSetupUI();
+  };
+
+  function startQuickQuizQuestion() {
+    if (state.quickQuizCurrentIndex >= state.quickQuizQuestions.length) {
+      finishQuickQuiz();
+      return;
+    }
+
+    state.quickQuizTimeLeft = 5;
+    renderQuickQuizCard();
+
+    if (state.quickQuizTimer) clearInterval(state.quickQuizTimer);
+
+    const startTime = Date.now();
+    const durationMs = 5000;
+
+    state.quickQuizTimer = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const remainingMs = Math.max(0, durationMs - elapsed);
+      state.quickQuizTimeLeft = (remainingMs / 1000).toFixed(1);
+
+      updateQuickQuizTimerUI(remainingMs / durationMs);
+
+      if (remainingMs <= 0) {
+        clearInterval(state.quickQuizTimer);
+        if (state.quickQuizAnswers[state.quickQuizCurrentIndex] === undefined) {
+          state.quickQuizAnswers[state.quickQuizCurrentIndex] = "TIME_EXPIRED";
+        }
+        
+        setTimeout(() => {
+          state.quickQuizCurrentIndex++;
+          startQuickQuizQuestion();
+        }, 300);
+      }
+    }, 50);
+  }
+
+  function updateQuickQuizTimerUI(ratio) {
+    const timerBar = document.getElementById("qq-timer-bar");
+    const timerText = document.getElementById("qq-timer-text");
+
+    if (timerBar) {
+      timerBar.style.width = `${(ratio * 100).toFixed(1)}%`;
+      if (ratio <= 0.3) {
+        timerBar.classList.add("warning");
+      } else {
+        timerBar.classList.remove("warning");
+      }
+    }
+
+    if (timerText) {
+      timerText.textContent = `${Math.ceil(state.quickQuizTimeLeft)}s`;
+      if (state.quickQuizTimeLeft <= 1.5) {
+        timerText.parentElement.classList.add("urgent");
+      } else {
+        timerText.parentElement.classList.remove("urgent");
+      }
+    }
+  }
+
+  function renderQuickQuizCard() {
+    const container = document.getElementById("quick-quiz-container");
+    if (!container) return;
+
+    const q = state.quickQuizQuestions[state.quickQuizCurrentIndex];
+    const totalQ = state.quickQuizQuestions.length;
+    const answeredOpt = state.quickQuizAnswers[state.quickQuizCurrentIndex];
+
+    let html = `
+      <div class="quick-quiz-card">
+        <div class="timer-bar-wrapper">
+          <div class="timer-bar-fill" id="qq-timer-bar" style="width: 100%;"></div>
+        </div>
+
+        <div class="quick-quiz-header">
+          <span class="q-num">Question ${state.quickQuizCurrentIndex + 1} of ${totalQ}</span>
+          <div class="timer-badge">
+            ⚡ <span id="qq-timer-text">5s</span>
+          </div>
+        </div>
+
+        <div class="q-text">${q.question}</div>
+
+        <div class="options-grid">
+    `;
+
+    q.options.forEach((opt, optIdx) => {
+      const prefixChar = String.fromCharCode(65 + optIdx);
+      let btnClass = "option-btn";
+
+      if (answeredOpt) {
+        if (opt === q.answer) {
+          btnClass += " correct";
+        } else if (opt === answeredOpt) {
+          btnClass += " wrong";
+        }
+      }
+
+      html += `
+        <button class="${btnClass}" ${answeredOpt ? "disabled" : ""} onclick="handleQuickQuizAnswer('${escapeQuote(opt)}')">
+          <span class="opt-prefix">${prefixChar}</span>
+          <span>${opt}</span>
+        </button>
+      `;
+    });
+
+    html += `
+        </div>
+      </div>
+    `;
+
+    container.innerHTML = html;
+  }
+
+  window.handleQuickQuizAnswer = function(selectedOpt) {
+    if (state.quickQuizAnswers[state.quickQuizCurrentIndex] !== undefined) return;
+
+    clearInterval(state.quickQuizTimer);
+    state.quickQuizAnswers[state.quickQuizCurrentIndex] = selectedOpt;
+
+    renderQuickQuizCard();
+
+    setTimeout(() => {
+      state.quickQuizCurrentIndex++;
+      startQuickQuizQuestion();
+    }, 800);
+  };
+
+  function finishQuickQuiz() {
+    state.quickQuizActive = false;
+    if (state.quickQuizTimer) clearInterval(state.quickQuizTimer);
+
+    const container = document.getElementById("quick-quiz-container");
+    if (!container) return;
+
+    let score = 0;
+    state.quickQuizQuestions.forEach((q, idx) => {
+      if (state.quickQuizAnswers[idx] === q.answer) {
+        score++;
+      }
+    });
+
+    // Update and persist Quick Quiz stats
+    state.quickQuizStats.attempts++;
+    state.quickQuizStats.lastScore = score;
+    if (score > state.quickQuizStats.bestScore) {
+      state.quickQuizStats.bestScore = score;
+    }
+    localStorage.setItem("sysadmin_quick_quiz_stats", JSON.stringify(state.quickQuizStats));
+
+    const percent = Math.round((score / state.quickQuizQuestions.length) * 100);
+
+    let html = `
+      <div class="quick-quiz-card qq-score-summary">
+        <div class="score-circle">${percent}%</div>
+        <h2>Quick Quiz Complete!</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 12px;">You scored <strong>${score} / ${state.quickQuizQuestions.length}</strong> points under 5s speed round rules.</p>
+        <div style="background: rgba(29, 185, 84, 0.1); border: 1px solid var(--accent-green); border-radius: var(--radius-full); display: inline-block; padding: 6px 18px; margin-bottom: 24px; font-size: 13px; color: var(--accent-green); font-weight: 700;">
+          🏆 Personal Best: ${state.quickQuizStats.bestScore}/10 &nbsp;•&nbsp; Attempts: ${state.quickQuizStats.attempts}
+        </div>
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <button class="btn-primary" onclick="initQuickQuizRestart()">
+            ⚡ Retake Same Category
+          </button>
+          <button class="btn-secondary" onclick="quitQuickQuizToSetup()">
+            🔀 Choose Different Category
+          </button>
+        </div>
+      </div>
+    `;
+
+    container.innerHTML = html;
+  }
+
+  window.initQuickQuizRestart = function() {
+    startQuickQuiz();
+  };
+
+  function initFlashcards() {
+    state.flashcardsList = REVIEWER_CONTENT.flashcards.filter(fc => {
+      if (state.flashcardsCategory !== "all" && fc.category !== state.flashcardsCategory) return false;
+      if (state.filterUnmasteredOnly && state.masteredCards.has(fc.id)) return false;
+      return true;
+    });
+
+    if (state.flashcardsList.length === 0) {
+      state.flashcardCurrentIndex = 0;
+    } else if (state.flashcardCurrentIndex >= state.flashcardsList.length) {
+      state.flashcardCurrentIndex = 0;
+    }
+
+    state.isCardFlipped = false;
+    renderFlashcard();
+  }
+
+  function renderFlashcard() {
+    const container = document.getElementById("flashcards-render-area");
+    const progressTrack = document.getElementById("mastery-progress-fill");
+    const progressText = document.getElementById("mastery-progress-text");
+
+    if (!container) return;
+
+    const totalMastered = state.masteredCards.size;
+    const totalCards = REVIEWER_CONTENT.flashcards.length;
+    const masterPercent = Math.round((totalMastered / totalCards) * 100);
+
+    if (progressTrack) progressTrack.style.width = `${masterPercent}%`;
+    if (progressText) progressText.textContent = `${totalMastered} / ${totalCards} Mastered (${masterPercent}%)`;
+
+    if (state.flashcardsList.length === 0) {
+      container.innerHTML = `
+        <div class="info-card" style="text-align: center; padding: 40px;">
+          <h3>🎉 All Selected Cards Mastered!</h3>
+          <p style="color: var(--text-secondary); margin-top: 10px;">Reset unmastered filter or change category to review more cards.</p>
+        </div>
+      `;
+      return;
+    }
+
+    const fc = state.flashcardsList[state.flashcardCurrentIndex];
+    const isMastered = state.masteredCards.has(fc.id);
+
+    let html = `
+      <div class="flashcard-wrapper ${state.isCardFlipped ? "flipped" : ""}" id="flashcard-card-el">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <span class="card-category-tag">${fc.category.toUpperCase()}</span>
+            ${isMastered ? `<span class="mastered-badge-top">✓ Mastered</span>` : ""}
+            <h3>${fc.term}</h3>
+            <span class="hint-text">Click or Press Spacebar to Flip Card 🔄</span>
+          </div>
+          <div class="flashcard-back">
+            <span class="card-category-tag">${fc.category.toUpperCase()}</span>
+            <p>${fc.definition}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard-controls">
+        <button class="fc-btn-icon" id="fc-prev-btn" title="Previous Card">←</button>
+
+        <button class="mastered-btn ${isMastered ? "active" : ""}" id="fc-master-btn">
+          ${isMastered ? "✓ Mastered" : "Mark as Mastered"}
+        </button>
+
+        <button class="btn-secondary" id="fc-shuffle-btn">
+          🔀 Shuffle
+        </button>
+
+        <button class="fc-btn-icon" id="fc-next-btn" title="Next Card">→</button>
+      </div>
+
+      <div style="text-align: center; margin-top: 14px; font-size: 13px; color: var(--text-muted);">
+        Card ${state.flashcardCurrentIndex + 1} of ${state.flashcardsList.length}
+      </div>
+    `;
+
+    container.innerHTML = html;
+
+    const cardEl = document.getElementById("flashcard-card-el");
+    if (cardEl) {
+      cardEl.addEventListener("click", () => {
+        state.isCardFlipped = !state.isCardFlipped;
+        cardEl.classList.toggle("flipped", state.isCardFlipped);
+      });
+    }
+
+    document.getElementById("fc-prev-btn")?.addEventListener("click", () => {
+      state.flashcardCurrentIndex = (state.flashcardCurrentIndex - 1 + state.flashcardsList.length) % state.flashcardsList.length;
+      state.isCardFlipped = false;
+      localStorage.setItem("sysadmin_fc_index", state.flashcardCurrentIndex);
+      renderFlashcard();
+    });
+
+    document.getElementById("fc-next-btn")?.addEventListener("click", () => {
+      state.flashcardCurrentIndex = (state.flashcardCurrentIndex + 1) % state.flashcardsList.length;
+      state.isCardFlipped = false;
+      localStorage.setItem("sysadmin_fc_index", state.flashcardCurrentIndex);
+      renderFlashcard();
+    });
+
+    document.getElementById("fc-shuffle-btn")?.addEventListener("click", () => {
+      state.flashcardsList = shuffleArray(state.flashcardsList);
+      state.flashcardCurrentIndex = 0;
+      state.isCardFlipped = false;
+      localStorage.setItem("sysadmin_fc_index", 0);
+      renderFlashcard();
+    });
+
+    document.getElementById("fc-master-btn")?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (state.masteredCards.has(fc.id)) {
+        state.masteredCards.delete(fc.id);
+      } else {
+        state.masteredCards.add(fc.id);
+      }
+      localStorage.setItem("sysadmin_mastered_fc", JSON.stringify([...state.masteredCards]));
+      renderFlashcard();
+    });
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (state.currentTab === "flashcards" && e.code === "Space") {
+      e.preventDefault();
+      const cardEl = document.getElementById("flashcard-card-el");
+      if (cardEl) {
+        state.isCardFlipped = !state.isCardFlipped;
+        cardEl.classList.toggle("flipped", state.isCardFlipped);
+      }
+    }
+  });
+
+  const unmasteredToggle = document.getElementById("toggle-unmastered-only");
+  if (unmasteredToggle) {
+    unmasteredToggle.checked = state.filterUnmasteredOnly;
+    unmasteredToggle.addEventListener("change", (e) => {
+      state.filterUnmasteredOnly = e.target.checked;
+      localStorage.setItem("sysadmin_fc_filter_unmastered", state.filterUnmasteredOnly);
+      initFlashcards();
+    });
+  }
+
+  function initFilterAndSearch() {
+    // 1. Reviewer Category Filter Pills (Inside Main Reviewer only)
+    const revPills = document.querySelectorAll("#reviewer-category-pills .filter-pill");
+    revPills.forEach(p => {
+      p.classList.toggle("active", p.getAttribute("data-category") === state.activeCategory);
+      p.addEventListener("click", () => {
+        state.activeCategory = p.getAttribute("data-category");
+        localStorage.setItem("sysadmin_active_category", state.activeCategory);
+        revPills.forEach(btn => btn.classList.remove("active"));
+        p.classList.add("active");
+        renderReviewerContent();
+      });
+    });
+
+    // 2. Reviewer Search Input (Inside Main Reviewer only)
+    const revSearch = document.getElementById("reviewer-search-input");
+    if (revSearch) {
+      revSearch.addEventListener("input", (e) => {
+        state.searchQuery = e.target.value;
+        renderReviewerContent();
+      });
+    }
+
+    // 3. Flashcards Category Pills (No search bar)
+    const fcPills = document.querySelectorAll("#flashcards-category-pills .filter-pill");
+    fcPills.forEach(p => {
+      p.classList.toggle("active", p.getAttribute("data-category") === state.flashcardsCategory);
+      p.addEventListener("click", () => {
+        state.flashcardsCategory = p.getAttribute("data-category");
+        localStorage.setItem("sysadmin_fc_category", state.flashcardsCategory);
+        fcPills.forEach(btn => btn.classList.remove("active"));
+        p.classList.add("active");
+        initFlashcards();
+      });
+    });
+
+    // 4. Full Quiz Setup Category Selection & Controls
+    const fullQuizOpts = document.querySelectorAll("#full-quiz-cat-options .setup-cat-opt");
+    fullQuizOpts.forEach(btn => {
+      btn.addEventListener("click", () => {
+        state.fullQuizCategory = btn.getAttribute("data-category");
+        updateFullQuizSetupUI();
+      });
+    });
+
+    const startFullQuizBtn = document.getElementById("start-full-quiz-btn");
+    if (startFullQuizBtn) {
+      startFullQuizBtn.addEventListener("click", () => {
+        startFullQuiz(true);
+      });
+    }
+
+    const retakeFullQuizBtn = document.getElementById("retake-full-quiz-btn");
+    if (retakeFullQuizBtn) {
+      retakeFullQuizBtn.addEventListener("click", () => {
+        if (confirm("Restart and reshuffle current category questions? Your current answers will be reset.")) {
+          startFullQuiz(true);
+        }
+      });
+    }
+
+    const changeCatFullQuizBtn = document.getElementById("change-cat-full-quiz-btn");
+    if (changeCatFullQuizBtn) {
+      changeCatFullQuizBtn.addEventListener("click", () => {
+        if (confirm("Return to category selection? This will reset your current test session.")) {
+          state.fullQuizStarted = false;
+          localStorage.setItem("sysadmin_full_quiz_started", "false");
+          state.fullQuizAnswers = {};
+          localStorage.setItem("sysadmin_full_quiz_answers", "{}");
+          const setupView = document.getElementById("full-quiz-setup");
+          const activeView = document.getElementById("full-quiz-active");
+          if (setupView) setupView.style.display = "block";
+          if (activeView) activeView.style.display = "none";
+          updateFullQuizSetupUI();
+        }
+      });
+    }
+
+    // 5. Quick Quiz Setup Category Selection & Controls
+    const quickQuizOpts = document.querySelectorAll("#quick-quiz-cat-options .setup-cat-opt");
+    quickQuizOpts.forEach(btn => {
+      btn.addEventListener("click", () => {
+        state.quickQuizCategory = btn.getAttribute("data-category");
+        updateQuickQuizSetupUI();
+      });
+    });
+
+    const startQuickQuizBtn = document.getElementById("start-quick-quiz-btn");
+    if (startQuickQuizBtn) {
+      startQuickQuizBtn.addEventListener("click", () => {
+        startQuickQuiz();
+      });
+    }
+
+    const quitQuickQuizBtn = document.getElementById("quit-quick-quiz-btn");
+    if (quitQuickQuizBtn) {
+      quitQuickQuizBtn.addEventListener("click", () => {
+        if (confirm("Cancel current speed round and return to category setup?")) {
+          quitQuickQuizToSetup();
+        }
+      });
+    }
+  }
+
+  // Reset All Progress in localStorage
+  const resetAllBtn = document.getElementById("reset-all-progress-btn");
+  if (resetAllBtn) {
+    resetAllBtn.addEventListener("click", () => {
+      if (confirm("Reset all saved study progress (highlights, quiz answers, flashcards mastery, and stats)? This cannot be undone.")) {
+        localStorage.removeItem("sysadmin_highlights");
+        localStorage.removeItem("sysadmin_full_quiz_questions");
+        localStorage.removeItem("sysadmin_full_quiz_answers");
+        localStorage.removeItem("sysadmin_full_quiz_category");
+        localStorage.removeItem("sysadmin_full_quiz_started");
+        localStorage.removeItem("sysadmin_quick_quiz_stats");
+        localStorage.removeItem("sysadmin_mastered_fc");
+        localStorage.removeItem("sysadmin_fc_index");
+        localStorage.removeItem("sysadmin_fc_category");
+        localStorage.removeItem("sysadmin_fc_filter_unmastered");
+        localStorage.removeItem("sysadmin_active_tab");
+        localStorage.removeItem("sysadmin_active_category");
+        localStorage.removeItem("sysadmin_active_color");
+        location.reload();
+      }
+    });
+  }
+
+  initNavigation();
+  initHighlighterControls();
+  initFilterAndSearch();
+  
+  // Launch last active tab from localStorage
+  switchTab(state.currentTab);
+});
+  </script>
+</body>
+</html>
